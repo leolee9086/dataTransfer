@@ -11,6 +11,7 @@ import layoutRow from './components/layoutRow.vue';
 import layoutTab from './components/layoutTab.vue';
 import filetree from './components/filetree.vue';
 import commonMenu from './components/commonMenu.vue';
+import protyleEditor from './components/protyleEditor.vue';
 
 const layout = reactive({
   dock: {
@@ -62,7 +63,8 @@ const layout = reactive({
           <template v-for="(column, i) in layout.center">
             <layoutColumn :option="column" :colIndex="i">
               <layoutTab>
-                <filetree :type="column.type"  @minimimal="$event"></filetree>
+              <filetree :type="column.type"  @minimimal="$event"></filetree>
+                <protyleEditor></protyleEditor>
               </layoutTab>
             </layoutColumn>
           </template>
@@ -71,6 +73,9 @@ const layout = reactive({
     </div>
     <dock :vertical="true" position="Right"></dock>
   </div>
+  <div id="commonMenu"></div>
+    <div id="barSync"><svg></svg></div>
+
   <dock position="Bottom"></dock>
   <commonMenu></commonMenu>
 </template>

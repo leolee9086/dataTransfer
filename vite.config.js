@@ -1,13 +1,25 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
-// https://vitejs.dev/config/
+import vitePluginIfdefCompile from './vite-ifdef-compile'
+import electron from './vite-electron'
+let path = require('path')
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    vitePluginIfdefCompile(),
+    electron({
+
+    }),  ],
+  "ifdef-define":{
+    BROWSER: true,
+    MOBILE:false, 
+    _DEBUG: 1 ,
+  },
+  'ifdef-option':{verbose: false},
   build:{
     outDir:"f:/siyuan/data/widgets/vitetest",
     assetsDir:'./src',
-    emptyOutDir:true
+    emptyOutDir:true,
   },
   base: './',
   server:{
@@ -18,7 +30,7 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/stage/, '')
       },
       "/api":{
-        target:"http://localhost/:80/api",
+        target:"http://localhost/:6806/api",
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       },
@@ -35,6 +47,17 @@ export default defineConfig({
     },
     cors: {
       allowedHeaders:['Content-Type', 'Authorization']
+    },
+    hmr:{
+      overlay:false
     }
-  }
+  },
+//  external:['electron'],
+  define: {
+    'process.env': {},
+  },
+  optimizeDeps: {
+  //exclude: ['electron',"@electron/remote"], // 告诉 Vite 排除预构建 electron，不然会出现 __diranme is not defined
+  },
+  resolve:{alias:[]}
 })
