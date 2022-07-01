@@ -1,82 +1,24 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { reactive } from "vue"
-import Toolbar from './components/toolbar.vue';
-import dock from './components/dock.vue';
-import commonIcons from './components/commonIcons.vue';
-import twitterEmojis from './components/twitterEmojis.vue';
-import layoutColumn from './components/layoutColumn.vue';
-import layoutRow from './components/layoutRow.vue';
-import layoutTab from './components/layoutTab.vue';
-import filetree from './components/filetree.vue';
-import commonMenu from './components/commonMenu.vue';
-import protyleEditor from './components/protyleEditor.vue';
-
-const layout = reactive({
-  dock: {
-    left: {
-      top: [],
-      bottom: [],
-    },
-    right: {
-      top: [],
-      bottom: [],
-    },
-    top: {
-      left: [],
-      right: []
-    },
-    bottom: {
-      left: [],
-      right: []
-    }
-  },
-  toolbarOption: {
-    left: [
-      { id: "toolbarVIP", label: "年付订阅", icon: "iconVIP" }
-    ],
-    right: [
-    ],
-    hide: false
-  },
-  left: [],
-  center: [
-    { type: "",uuid:'',option:{}}, { type: "", uuid: '',option:{}}, { type: "", uuid: '',option:{}}
-  ],
-  top: [],
-})
-
-</script>
-
 <template>
-  <commonIcons></commonIcons>
-  <twitterEmojis></twitterEmojis>
-  <toolbar :option="layout.toolbarOption">
-  </toolbar>
-  <dock position="Top"></dock>
-  <div class="fn__flex-1 fn__flex">
-    <dock :vertical="true" position="Left"></dock>
-    <div id="layouts" class="layout fn__flex-1 fn__flex-column">
-      <layoutColumn  :colIndex="i" :autoHeight="true" :autoWidth="true">
-        <layoutRow :option="layout.center" :autoHeight="true">
-          <template v-for="(column, i) in layout.center">
-            <layoutColumn :option="column" :colIndex="i">
-              <layoutTab>
-              <filetree :type="column.type"  @minimimal="$event"></filetree>
-                <protyleEditor></protyleEditor>
-              </layoutTab>
-            </layoutColumn>
-          </template>
-        </layoutRow>
-      </layoutColumn>
+  <teleport to="body">
+    <B3Dock position="Top"></B3Dock>
+    <div class="fn__flex fn__flex-1" >
+      <B3Dock position="Left" :vertical="true"></B3Dock>
+      <div id="layouts" class="fn__flex fn__flex-1">
+        <B3LayoutColumn
+          ><B3ProtylePreviewer id="20200905090211-2vixtlf"></B3ProtylePreviewer>
+        </B3LayoutColumn>
+        <B3LayoutColumn>
+          <B3ProtylePreviewer id="20210618013343-zij807a"></B3ProtylePreviewer>
+        </B3LayoutColumn>
+      </div>
+      <B3Dock :vertical="true" position="Right"></B3Dock>
     </div>
-    <dock :vertical="true" position="Right"></dock>
-  </div>
-  <div id="commonMenu"></div>
-    <div id="barSync"><svg></svg></div>
-
-  <dock position="Bottom"></dock>
-  <commonMenu></commonMenu>
+    <B3Dock position="Bottom"></B3Dock>
+  </teleport>
 </template>
+<script setup>
+import { ref } from "vue";
+import B3ProtylePreviewer from "./siyuanUI/src/components/B3ProtylePreviewer.vue";
 
+const layout = ref(null);
+</script>

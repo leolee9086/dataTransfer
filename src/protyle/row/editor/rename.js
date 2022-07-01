@@ -11,7 +11,7 @@ import { fetchPost } from "../util/fetch";
 import { escapeHtml } from "../util/escape";
 export const validateName = (name) => {
     if (/\r\n|\r|\n|\u2028|\u2029|\t|\//.test(name)) {
-        showMessage(window.siyuan.languages.fileNameRule);
+       // showMessage(window.siyuan.languages.fileNameRule);
         return false;
     }
     return true;

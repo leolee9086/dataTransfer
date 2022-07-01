@@ -1,12 +1,13 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vitePluginIfdefCompile from './vite-ifdef-compile'
+import vitePluginIfdef from 'vite-plugin-ifdef'
+
 import electron from './vite-electron'
 let path = require('path')
 export default defineConfig({
   plugins: [
     vue(),
-    vitePluginIfdefCompile(),
+    vitePluginIfdef(),
     electron({
 
     }),  ],
@@ -15,7 +16,7 @@ export default defineConfig({
     MOBILE:false, 
     _DEBUG: 1 ,
   },
-  'ifdef-option':{verbose: false},
+  'ifdef-option':{verbose: true},
   build:{
     outDir:"f:/siyuan/data/widgets/vitetest",
     assetsDir:'./src',
@@ -29,6 +30,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => path.replace(/^\/stage/, '')
       },
+      "/widgets":{
+        target:"http://127.0.0.1:6806/widgets",
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/widgets/, '')
+      },
+
       "/api":{
         target:"http://localhost/:6806/api",
         changeOrigin: true,
@@ -49,7 +56,7 @@ export default defineConfig({
       allowedHeaders:['Content-Type', 'Authorization']
     },
     hmr:{
-      overlay:false
+      overlay:true
     }
   },
 //  external:['electron'],

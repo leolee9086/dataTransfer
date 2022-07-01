@@ -1,7 +1,10 @@
 import { getAllModels } from "../../layout/getAll";
 import { isMobile } from "../../util/functions";
 import { setPadding } from "../ui/initUI";
-export const fullscreen = (element, btnElement) => {
+export const fullscreen = (element, btnElement,siyuan) => {
+    if(!siyuan){
+        siyuan=window.siyuan
+    }
     const isFullscreen = element.className.includes("fullscreen");
     if (isFullscreen) {
         element.classList.remove("fullscreen");
@@ -24,9 +27,9 @@ export const fullscreen = (element, btnElement) => {
         }
     }
     else if (!isMobile()) {
-        window.siyuan.editorIsFullscreen = !isFullscreen;
+        siyuan.editorIsFullscreen = !isFullscreen;
         getAllModels().editor.forEach(item => {
-            if (window.siyuan.editorIsFullscreen) {
+            if (siyuan.editorIsFullscreen) {
                 if (!element.isSameNode(item.element) && item.element.classList.contains("fullscreen")) {
                     item.element.classList.remove("fullscreen");
                     setPadding(item.editor.protyle);
