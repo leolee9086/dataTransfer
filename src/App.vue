@@ -38,7 +38,8 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
           layoutArray.selectedBlockIndex.value
         });transition: var(--b3-width-transition); `"
       >
-        <div>
+        <div class="fn__flex fn__flex-1 ">
+          <div class="fn__flex fn__flex-1 fn__flex-column">
           <div class="layout layout_toolbar">
             <span>临时收集箱{{ layoutArray.selectedBlockIndex.value }}</span>
           </div>
@@ -50,6 +51,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
             <tempBoxItem v-if="id" :id="id" :key="id + 'selectedBlock' + i">
             </tempBoxItem>
           </template>
+          </div>
         </div>
       </div>
 
@@ -71,11 +73,13 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
   </teleport>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive,nextTick } from "vue";
 import B3ProtylePreviewer from "./siyuanUI/src/components/B3ProtylePreviewer.vue";
 import B3layoutColumn from "./siyuanUI/src/components/B3layoutColumn.vue";
 import B3TabBar from "./siyuanUI/src/components/B3TabBar.vue";
 import { appendRight } from "./util/columnHandeler";
+import { debounce } from "./util/event.js";
+
 window.addEventListener("keydown", (event) => {
   if (event.ctrlKey) {
     window.ctrlKey = true;
@@ -86,18 +90,22 @@ window.addEventListener("keydown", (event) => {
   if (event.altKey) {
     window.altKey = true;
   }
-  console.log(event);
-  for (let num of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-    if (num <= 4 && event.code =='Digit'+ num  && window.altKey && window.shiftKey) {
-      layoutArray.selectedBlockIndex.value = num + 9;
-      showTempBox(num + 9);
-      return;
-    }
-    if (event.key == num + "" && window.altKey) {
-      event.preventDefault();
-      event.stopPropagation();
-      layoutArray.selectedBlockIndex.value = num;
-      showTempBox(num);
+  if (!event.repeat) {
+    for (let num of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+      if (num <= 4 && event.code == "Digit" + num && window.altKey && window.shiftKey) {
+        showTempBox(num + 9)
+        event.stopPropagation();
+        event.preventDefault();
+
+        return;
+      }
+      if (event.key == num + "" && window.altKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        showTempBox(num)
+        event.stopPropagation();
+        event.preventDefault();
+      }
     }
   }
 });
@@ -107,8 +115,6 @@ window.addEventListener("keyup", (event) => {
   window.shiftKey = false;
 
   window.altKey = false;
-
-  console.log(window.ctrlKey, window.shiftKey, window.altKey);
 });
 window.addEventListener("paste", ($event) => {
   $event.stopPropagation();
@@ -131,8 +137,6 @@ window.addEventListener("paste", ($event) => {
     }
   }
 });
-
-
 const layoutArray = reactive({
   layout: [{ id: "20210428212840-859h45j", type: "filter" }],
   selectedBlock: [[], [], [], [], [], [], [], [], [], [], [], [], []],
@@ -140,8 +144,9 @@ const layoutArray = reactive({
 });
 const tempBoxShow = reactive({ value: false });
 function showTempBox(num) {
-  if (num == layoutArray.selectedBlockIndex.value+'') {
-    tempBoxShow.value = !tempBoxShow.value;
+  console.log(num, layoutArray.selectedBlockIndex.value);
+  if (num+'' == layoutArray.selectedBlockIndex.value+'') {
+    debounce(()=>{tempBoxShow.value = !tempBoxShow.value},100)
   }
   window.selectedBlock = layoutArray.selectedBlock;
   layoutArray.selectedBlockIndex.value = num;
