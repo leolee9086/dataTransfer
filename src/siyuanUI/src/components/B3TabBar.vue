@@ -1,19 +1,101 @@
 <template>
-    <ul class="fn__flex layout-tab-bar" v-if="!closed">
-        <li data-type="tab-header" draggable="true" data-id="" data-position="center" class="item"
-            aria-label="综合笔记本/JRE" style="opacity: 1;">
-            <span class="item__text">JRE</span>
-            <span class="item__close">
-                <svg>
-                    <use xlink:href="#iconClose" @click="close"></use>
-                </svg>
-            </span>
-        </li>
-    </ul>
+  <div class="fn__flex layout-tab-bar dock dock--vertical">
+    <div>
+      <div>
+        <div
+          class="dock__item b3-tooltips b3-tooltips__e"
+          aria-label="预览"
+          @click="remove(index)"
+        >
+          <svg>
+            <use xlink:href="#iconClose"></use>
+          </svg>
+        </div>
+        <div
+          class="dock__item b3-tooltips b3-tooltips__e"
+          aria-label="预览"
+          @click="switchToLeft(index)"
+        >
+          <svg>
+            <use xlink:href="#icon-1f501"></use>
+          </svg>
+        </div>
+
+        <div
+          class="dock__item b3-tooltips b3-tooltips__e"
+          aria-label="预览"
+          @click="switchToPreviewer"
+        >
+          <svg>
+            <use xlink:href="#iconFile"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconFiles"></use>
+          </svg>
+        </div>
+        <div
+          @click="moveRight(options.id, index)"
+          class="dock__item b3-tooltips b3-tooltips__sw"
+        >
+          <svg>
+            <use xlink:href="#iconRight"></use>
+          </svg>
+        </div>
+        <div
+          @click="moveRight(options.id, index)"
+          class="dock__item b3-tooltips b3-tooltips__sw"
+        >
+          <svg>
+            <use xlink:href="#iconLeft"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconAdd"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconTrashcan"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconAlignCenter"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconSettings"></use>
+          </svg>
+        </div>
+        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+          <svg>
+            <use xlink:href="#iconGraph"></use>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fn_flex-1"
+      style="writing-mode: vertical-lr !important; text-align: center"
+    >
+      <div
+        class="protyle-title protyle-wysiwyg--attr protyle-title__input vertical"
+        style="margin: 0%"
+      >
+        <div contenteditable="true" spellcheck="false" style="outline: none">测试</div>
+      </div>
+      <div></div>
+    </div>
+    <div style="writing-mode: vertical-lr !important; text-align: center">
+      {{ options.id }}
+    </div>
+  </div>
 </template>
 <script setup>
-    const emit = defineEmits(['close'])
-    function close(){
-        emit('close')
-    }
+import { appendLeft, appendRight, moveRight, remove,switchToLeft } from "../../../util/columnHandeler";
+let { options, index } = defineProps(["options", "index"]);
 </script>

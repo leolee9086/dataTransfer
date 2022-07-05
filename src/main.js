@@ -23,16 +23,16 @@ let fs= require('fs')
 
 ///#endif
 window.__dirname = ""
+window.layout=[]
+window.selectedBlock=[]
+
 const LUTE = await import ('./stage/js/lute/lute.min.js')
 console.log(LUTE)
 const 核心api = new kernelApiList()
 const eventBus =new EventBus()
 window.eventBus = eventBus
 window.核心api = 核心api
-window.lsNotebooks=[]
-window.lsNotebooks = await 核心api.lsNotebooks()
 window.siyuan=mocksiyuan()
-console.log(lsNotebooks)
 const app = createApp(App);
 app.use(siyuanUI)
 app.directive("b3show", {beforeMount: (el, binding)=> {

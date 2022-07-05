@@ -10,6 +10,10 @@ import B3LayoutColumn from "./src/components/B3LayoutColumn.vue";
 import B3LayoutRow from "./src/components/B3LayoutRow.vue";
 import B3ProtylePreviewer from "./src/components/B3ProtylePreviewer.vue";
 import B3Dock from "./src/components/B3Dock.vue";
+import B3DocTiltle from "./src/components/B3DocTiltle.vue";
+import B3Filetree from "./src/components/B3Filetree.vue";
+import B3TabBar from "./src/components/B3TabBar.vue";
+import tempBoxItem from "./src/components/tempBox/tempBoxItem.vue";
 
 const siyuanUI = {};
 siyuanUI.install = function (Vue) {
@@ -25,6 +29,11 @@ siyuanUI.install = function (Vue) {
   Vue.component("B3breadCrumb", B3breadCrumb);
   Vue.component("B3LayoutRow", B3LayoutRow);
   Vue.component("B3Dock", B3Dock);
+  Vue.component("B3DocTiltle", B3DocTiltle);
+  Vue.component("B3Filetree", B3Filetree);
+  Vue.component("B3TabBar", B3TabBar);
+  Vue.component("tempBoxItem", tempBoxItem);
+
   ///#if!BROWSER
   /*  Vue.component(B3Select.name, B3Select);
   Vue.component(B3Select.name, B3Select);
