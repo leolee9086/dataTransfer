@@ -253,8 +253,16 @@ export function checkSelected(id) {
     }
   }
 }
+
+
 export function switchToPreviewer(index){
   if(window.layout[index]){
     window.layout[index].type='Previewer'
+  }
+}
+export function switchToFiletree(index){
+  if(window.layout[index]){
+    window.layout[index].type='Filetree'
+
   }
 }

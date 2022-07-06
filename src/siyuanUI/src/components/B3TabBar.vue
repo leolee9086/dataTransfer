@@ -21,20 +21,31 @@
           </svg>
         </div>
 
+        
+        
         <div
           class="dock__item b3-tooltips b3-tooltips__e"
           aria-label="预览"
           @click="switchToPreviewer(index)"
+          v-if="options.type!=='Previewer'"
         >
           <svg>
             <use xlink:href="#iconFile"></use>
           </svg>
         </div>
-        <div @click="switchToFiletree" class="dock__item b3-tooltips b3-tooltips__sw">
+        <div 
+        @click="switchToFiletree(index)" 
+        class="dock__item b3-tooltips b3-tooltips__sw"
+                  v-if="options.type=='Previewer'"
+
+        >
           <svg>
             <use xlink:href="#iconFiles"></use>
           </svg>
         </div>
+
+
+
         <div
           @click="moveRight(options.id, index)"
           class="dock__item b3-tooltips b3-tooltips__sw"
@@ -102,7 +113,8 @@ import {
   moveRight, 
   remove,
   switchToLeft,
-  switchToPreviewer
+  switchToPreviewer,
+  switchToFiletree
   } from "../../../util/columnHandeler";
 let { options, index } = defineProps(["options", "index"]);
 </script>

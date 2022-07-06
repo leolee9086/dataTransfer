@@ -65,7 +65,7 @@ const switchToFiletree = function () {
     >
       <component
         :index="index"
-        :is="realoptions.type == 'filter' ? 'B3Filetree' : 'B3ProtylePreviewer'"
+        :is="realoptions.type == 'Filetree' ? 'B3Filetree' : 'B3ProtylePreviewer'"
         :options="realoptions"
       ></component>
     </div>
