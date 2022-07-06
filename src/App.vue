@@ -38,19 +38,19 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
           layoutArray.selectedBlockIndex.value
         });transition: var(--b3-width-transition); `"
       >
-        <div class="fn__flex fn__flex-1 ">
+        <div class="fn__flex fn__flex-1">
           <div class="fn__flex fn__flex-1 fn__flex-column">
-          <div class="layout layout_toolbar">
-            <span>临时收集箱{{ layoutArray.selectedBlockIndex.value }}</span>
-          </div>
-          <template
-            v-for="(id, i) in layoutArray.selectedBlock[
-              layoutArray.selectedBlockIndex.value
-            ]"
-          >
-            <tempBoxItem v-if="id" :id="id" :key="id + 'selectedBlock' + i">
-            </tempBoxItem>
-          </template>
+            <div class="layout layout_toolbar">
+              <span>临时收集箱{{ layoutArray.selectedBlockIndex.value }}</span>
+            </div>
+            <template
+              v-for="(id, i) in layoutArray.selectedBlock[
+                layoutArray.selectedBlockIndex.value
+              ]"
+            >
+              <tempBoxItem v-if="id" :id="id" :key="id + 'selectedBlock' + i">
+              </tempBoxItem>
+            </template>
           </div>
         </div>
       </div>
@@ -62,6 +62,21 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
             </B3layoutColumn>
           </template>
         </template>
+        <div class="fn_flex fn__flex-1" style="min-width: 300px">
+          <div class="layout__empty b3-list" style="text-align: center">
+            <h2>双击增加分栏</h2>
+            <div class="b3-list-item" id="editorEmptySearch">
+              <svg class="b3-list-item__graphic">
+                <use xlink:href="#iconSearch"></use></svg
+              ><span>搜索</span><span class="b3-list-item__meta">Ctrl+P</span>
+            </div>
+              <div class="b3-list-item" id="editorEmptySearch">
+              <svg class="b3-list-item__graphic">
+                <use xlink:href="#iconHelp"></use></svg
+              ><span>关于</span><span class="b3-list-item__meta">Ctrl+P</span>
+            </div>
+          </div>
+        </div>
       </div>
       <B3Dock
         :vertical="true"
@@ -73,7 +88,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
   </teleport>
 </template>
 <script setup>
-import { ref, reactive,nextTick } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import B3ProtylePreviewer from "./siyuanUI/src/components/B3ProtylePreviewer.vue";
 import B3layoutColumn from "./siyuanUI/src/components/B3layoutColumn.vue";
 import B3TabBar from "./siyuanUI/src/components/B3TabBar.vue";
@@ -88,8 +103,10 @@ const layoutArray = reactive({
 const tempBoxShow = reactive({ value: false });
 function showTempBox(num) {
   console.log(num, layoutArray.selectedBlockIndex.value);
-  if (num+'' == layoutArray.selectedBlockIndex.value+'') {
-    debounce(()=>{tempBoxShow.value = !tempBoxShow.value},100)
+  if (num + "" == layoutArray.selectedBlockIndex.value + "") {
+    debounce(() => {
+      tempBoxShow.value = !tempBoxShow.value;
+    }, 100);
   }
   window.selectedBlock = layoutArray.selectedBlock;
   layoutArray.selectedBlockIndex.value = num;
@@ -119,11 +136,11 @@ window.addEventListener("keydown", (event) => {
   if (event.altKey) {
     window.altKey = true;
   }
-  
+
   if (!event.repeat) {
     for (let num of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
       if (num <= 4 && event.code == "Digit" + num && window.altKey && window.shiftKey) {
-        showTempBox(num + 9)
+        showTempBox(num + 9);
         event.stopPropagation();
         event.preventDefault();
         return;
@@ -131,14 +148,15 @@ window.addEventListener("keydown", (event) => {
       if (event.key == num + "" && window.altKey) {
         event.preventDefault();
         event.stopPropagation();
-        showTempBox(num)
+        showTempBox(num);
         event.stopPropagation();
         event.preventDefault();
       }
-      if(num&&(event.code=='Digit' + num||event.key==num)){
-        window.Digit = {num:num}
+      if (num && (event.code == "Digit" + num || event.key == num)) {
+        window.Digit = { num: num };
         event.stopPropagation();
-        event.preventDefault();1
+        event.preventDefault();
+        1;
       }
     }
   }
@@ -147,7 +165,7 @@ window.addEventListener("keyup", (event) => {
   window.ctrlKey = false;
   window.shiftKey = false;
   window.altKey = false;
-  window.Digit={num:undefined}
+  window.Digit = { num: undefined };
 });
 window.addEventListener("paste", ($event) => {
   $event.stopPropagation();
@@ -170,7 +188,6 @@ window.addEventListener("paste", ($event) => {
     }
   }
 });
-
 </script>
 <style>
 .dock--vertical {
