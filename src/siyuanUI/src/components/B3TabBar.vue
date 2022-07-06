@@ -13,7 +13,7 @@
         </div>
         <div
           class="dock__item b3-tooltips b3-tooltips__e"
-          aria-label="预览"
+          aria-label="向左移动"
           @click="switchToLeft(index)"
         >
           <svg>
@@ -24,7 +24,7 @@
         <div
           class="dock__item b3-tooltips b3-tooltips__e"
           aria-label="预览"
-          @click="switchToPreviewer"
+          @click="switchToPreviewer(index)"
         >
           <svg>
             <use xlink:href="#iconFile"></use>
@@ -96,6 +96,13 @@
   </div>
 </template>
 <script setup>
-import { appendLeft, appendRight, moveRight, remove,switchToLeft } from "../../../util/columnHandeler";
+import { 
+  appendLeft, 
+  appendRight, 
+  moveRight, 
+  remove,
+  switchToLeft,
+  switchToPreviewer
+  } from "../../../util/columnHandeler";
 let { options, index } = defineProps(["options", "index"]);
 </script>
