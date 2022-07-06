@@ -11,7 +11,6 @@ export default function setSiyuan(){
             ws:{},
             menus:{},
             languages:{
-                
             },
             config:{
                 "logLevel": "debug",

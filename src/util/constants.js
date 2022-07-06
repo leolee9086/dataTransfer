@@ -1,0 +1,1 @@
+export const ID_Length = window.lute?window.lute.NewNodeID().length:"20200812220555-lj3enxa".length

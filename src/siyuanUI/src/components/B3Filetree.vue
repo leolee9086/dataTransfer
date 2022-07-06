@@ -53,14 +53,14 @@
       <div class="protyle-breadcrumb__bar protyle-breadcrumb__bar">
         <span
           class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
-          @click="getNotebooks"
+          @click="getNotebooks(index)"
         >
           工作空间/
         </span>
         <span
           v-if="currentdata.noteBookConf.conf"
           class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
-          @click="goToPath(currentdata.noteBook, '/')"
+          @click="goToPath(currentdata.noteBook, '/',index)"
         >
           {{ currentdata.noteBookConf.conf.name }}/
         </span>
@@ -70,7 +70,7 @@
               class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
               v-if="currentdata.nameDict[item]"
               @click="
-                goToPath(currentdata.nameDict[item].box, currentdata.nameDict[item].path)
+                goToPath(currentdata.nameDict[item].box, currentdata.nameDict[item].path,index)
               "
               >{{ currentdata.nameDict[item].content }}/</span
             >
@@ -78,24 +78,23 @@
         </template>
       </div>
     </div>
-    <div class="fn__flex-1" data-type="navigation" v-if="realtype !== 'files'">
-      <template v-for="(item, i) in Notebooks" v-if="Notebooks">
+    <div class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
+      <template v-for="(item, i) in notebooks.value" v-if="notebooks">
         <notebookItem
-          @click="goToPath(item.id, '/')"
+          @click="goToPath(item.id, '/',index)"
           :notebook="item"
           v-if="!item.closed"
         >
         </notebookItem>
       </template>
     </div>
-    <div class="fn__flex-1" data-type="navigation" v-if="realtype == 'files'">
+    <div class="fn__flex-1 Filetree" data-type="navigation" v-if="currentdata.subtype == 'Filetree'">
       <ul class>
-        <template v-for="(item, i) in currentdata.files" :key="item.id+i+index">
+        <template v-for="(item, i) in currentdata.files" :key="item.id + i + index+''">
           <fileItem
             :file="item"
-            @click="goToPath(currentdata.noteBook, item.path)"
+            @click="goToPath(currentdata.noteBook, item.path,index)"
             :index="index"
-         
           ></fileItem>
         </template>
       </ul>
@@ -103,52 +102,53 @@
   </div>
 </template>
 <script setup>
-import { moveRight, moveLeft, setId,setNoteBook,selectBlock,moveTemp } from "../../../util/columnHandeler";
-
+import {
+  moveRight,
+  moveLeft,
+  selectBlock,
+  moveTemp,
+} from "../../../util/columnHandeler";
 import { reactive, watch, onMounted, ref } from "vue";
 import notebookItem from "./filetree/notebookItem.vue";
 import fileItem from "./filetree/fileItem.vue";
+import {
+  setName,
+  goToPath,
+  getNotebookConf,
+  setId,
+  getNotebooks
+} from "../../../util/dataHandler"
 const emit = defineEmits(["最小化"]);
+
 let { options, index } = defineProps(["options", "index"]);
 console.log(options);
-let { type, id,noteBook } = options;
+console.log(window.layout[index]);
+let { type, id, noteBook } = options;
 let realtype = "" + type;
 realtype = ref(realtype);
-let currentdata = reactive({
-  noteBook: "",
-  files: [],
-  path: "",
-  Hpath: "",
-  boxIcon: "",
-  noteBookConf: {},
-  pathArray: [],
-  nameDict: {},
-  name: "",
-});
-let Notebooks = ref([]);
-
+let currentdata = window.layout[index]["data"];
+    let notebooks = window.notebooks
 onMounted(() => {
   if (id) {
+    console.log(index)
     let sql = `select * from blocks where id = '${id}'`;
     window.核心api.sql({ stmt: sql }, "", (data) => {
-      console.log(data);
-      data && data[0] ? goToPath(data[0].box, data[0].path) : null;
+      data && data[0] ? goToPath(data[0].box, data[0].path,index) : null;
+      if (data && data[0]) {
+        setName(data[0].content,index)
+      }
       console.log(currentdata.nameDict);
     });
   }
-  if(!id&&noteBook){
-      goToPath(noteBook,'/')
+  if (!id && noteBook) {
+    goToPath(noteBook, "/");
   }
 });
 let realid = "" + id;
 realid = ref(id);
-getNotebooks();
+getNotebooks(index);
 
-function getNotebookConf() {
-  window.核心api.getNotebookConf({ notebook: currentdata.noteBook }, "", (data) => {
-    currentdata.noteBookConf = data;
-  });
-}
+
 function getPathName() {
   currentdata.pathArray.forEach((item) => {
     if (item.length > 4) {
@@ -164,14 +164,7 @@ function getHpath() {
     }
   );
 }
-function getNotebooks() {
-  window.核心api.lsNotebooks({}, "", (data) => {
-    console.log("测试", data);
-    Notebooks.value = data.notebooks;
-    console.log(Notebooks);
-  });
-  realtype.value = "";
-}
+
 function goToParent() {
   let path = currentdata.path;
   console.log(path);
@@ -181,52 +174,15 @@ function goToParent() {
       currentdata.path.length - "20210808180117-czj9bvb".length - 3
     ) + ".sy";
   ParentPath == "/.sy" ? (ParentPath = "/") : null;
+  console.log(ParentPath,path)
   if (ParentPath !== ".sy" && currentdata.path !== "/" && path) {
-    goToPath(currentdata.noteBook, ParentPath);
+    goToPath(currentdata.noteBook, ParentPath,index);
   } else {
-    currentdata.noteBook = "";
-    currentdata.files = [];
-    currentdata.path = "";
-    currentdata.Hpath = "";
-    currentdata.boxIcon = "";
-    currentdata.noteBookConf = {};
-    currentdata.pathArray = [];
-    currentdata.nameDict = {};
-    getNotebooks();
-    setId("", index,currentdata.noteBook);
+    getNotebooks(index);
+    setId("", index, currentdata.noteBook);
   }
 }
-function getPathArray() {
-  let array = currentdata.path.split("/");
-  currentdata.pathArray = array;
-  array.forEach((item) => getPathItemInfor(item));
-}
-function getPathItemInfor(pathItem) {
-  let id = pathItem.slice(0, "20210808180117-czj9bvb".length);
-  let sql = `select * from blocks where id = '${id}'`;
-  window.核心api.sql({ stmt: sql }, "", (data) => {
-    console.log(data);
-    data && data[0] ? (currentdata.nameDict[pathItem] = data[0]) : null;
-    console.log(currentdata.nameDict);
-  });
-}
-function goToPath(noteBook, path) {
-  console.log(noteBook, path);
-  window.核心api.listDocsByPath({ path: path, notebook: noteBook }, "", (data) => {
-    if (data) {
-      currentdata.noteBook = noteBook;
-      currentdata.path = path;
-      currentdata.files = data.files;
-      realtype.value = "files";
-      console.log(currentdata);
-      getHpath();
-      getNotebookConf();
-      getPathArray();
-      setId(path, index);
-      setNoteBook(noteBook,index)
-    }
-  });
-}
+
 
 let view = reactive({ 最小化: false });
 const 最小化文档树 = () => {

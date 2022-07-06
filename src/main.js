@@ -6,6 +6,7 @@ import EventBus from "./eventBus.js";
 import setSiyuan from "./setSiyuan.js"
 import siyuanUI from "./siyuanUI";
 import mocksiyuan from "./setSiyuan.js"
+
 ///#ifBROWSER
 let emoji= await fetch('./src/emojis.svg')
 emoji = await emoji.text()
@@ -41,4 +42,4 @@ app.directive("b3show", {beforeMount: (el, binding)=> {
     el.classList.add("fn__none");
   }
 }})
-app.mount("#app");
+app.mount("#app")

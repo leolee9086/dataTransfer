@@ -1,5 +1,5 @@
 <template>
-  <div class="fn__flex layout-tab-bar dock dock--vertical">
+  <div class="fn__flex fn_flex-column layout-tab-bar dock dock--vertical">
     <div>
       <div>
         <div
@@ -21,31 +21,25 @@
           </svg>
         </div>
 
-        
-        
         <div
           class="dock__item b3-tooltips b3-tooltips__e"
           aria-label="预览"
           @click="switchToPreviewer(index)"
-          v-if="options.type!=='Previewer'"
+          v-if="options.type !== 'Previewer'"
         >
           <svg>
             <use xlink:href="#iconFile"></use>
           </svg>
         </div>
-        <div 
-        @click="switchToFiletree(index)" 
-        class="dock__item b3-tooltips b3-tooltips__sw"
-                  v-if="options.type=='Previewer'"
-
+        <div
+          @click="switchToFiletree(index)"
+          class="dock__item b3-tooltips b3-tooltips__sw"
+          v-if="options.type == 'Previewer'"
         >
           <svg>
             <use xlink:href="#iconFiles"></use>
           </svg>
         </div>
-
-
-
         <div
           @click="moveRight(options.id, index)"
           class="dock__item b3-tooltips b3-tooltips__sw"
@@ -55,7 +49,7 @@
           </svg>
         </div>
         <div
-          @click="moveRight(options.id, index)"
+          @click="moveLeft(options.id, index)"
           class="dock__item b3-tooltips b3-tooltips__sw"
         >
           <svg>
@@ -89,32 +83,53 @@
         </div>
       </div>
     </div>
-    <div
-      class="fn_flex-1"
-      style="writing-mode: vertical-lr !important; text-align: center"
-    >
+    <div class="fn_flex" style="writing-mode: vertical-lr !important; text-align: center">
       <div
         class="protyle-title protyle-wysiwyg--attr protyle-title__input vertical"
         style="margin: 0%"
       >
-        <div contenteditable="true" spellcheck="false" style="outline: none">测试</div>
+        <div
+          contenteditable="true"
+          spellcheck="false"
+          style="outline: none"
+          ref="titleDOM"
+          @input="onInput"
+        >
+          {{ currentData.name||(DocInfo.value&&DocInfo.value.name) }}
+        </div>
       </div>
       <div></div>
     </div>
-    <div style="writing-mode: vertical-lr !important; text-align: center">
-      {{ options.id }}
-    </div>
+    <div class="fn_flex fn_flex-1"></div>
   </div>
 </template>
 <script setup>
-import { 
-  appendLeft, 
-  appendRight, 
-  moveRight, 
+import {
+  appendLeft,
+  appendRight,
+  moveRight,
+    moveLeft,
+
   remove,
   switchToLeft,
   switchToPreviewer,
-  switchToFiletree
-  } from "../../../util/columnHandeler";
-let { options, index } = defineProps(["options", "index"]);
+  switchToFiletree,
+  refreshIndex
+} from "../../../util/columnHandeler";
+import { ref,watch } from "vue";
+import {debounce} from '../../../util/event'
+let { options, index } = defineProps(["options", "index", "docInfo"]);
+
+let titleDOM = ref(null);
+let DocInfo = ref({});
+let currentData = window.layout[index]['data']
+
+const onInput = function () {
+  window.核心api.renameDoc({
+    path: DocInfo.value.path,
+    notebook: DocInfo.value.notebook,
+    title: titleDOM.value.innerText,
+  },'',()=>{setTimeout(()=>debounce(function(){refreshIndex(index)},1000),1000)});
+};
+
 </script>

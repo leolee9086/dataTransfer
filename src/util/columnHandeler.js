@@ -1,13 +1,17 @@
-export function appendRight(options = { id: "", type: "filter" }) {
+import {ID_Length} from './constants.js'
+import {genColumndata} from "./dataHandler"
+export function appendRight(options = genColumndata()) {
   window.layout.push(options);
-}
-export function appendLeft(options = { id: "", type: "filter" }) {
-  window.layout.unshift(options);
   refreshAll();
+
+}
+export function appendLeft(options = genColumndata()) {
+  window.layout.unshift(options);
+ // refreshAll();
 }
 export function moveRight(id, index) {
   if (window.ctrlKey) {
-    appendRight({ id: id, type: "filter" });
+    appendRight({ id: id, type: "Filetree" });
     return;
   }
   console.log(id, index);
@@ -21,12 +25,14 @@ export function moveRight(id, index) {
     }
     moveFileById(id, targetId);
   } else {
-    appendRight({ id: id, type: "filter" });
+    appendRight(
+      genColumndata(window.layout[index])
+    );
   }
 }
 export function moveLeft(id, index) {
   if (window.ctrlKey) {
-    appendLeft({ id: id, type: "filter" });
+    appendLeft({ id: id, type: "Filetree" });
     return;
   }
   console.log(id, index);
@@ -40,7 +46,7 @@ export function moveLeft(id, index) {
     }
     moveFileById(id, targetId);
   } else {
-    appendLeft({ id: id, type: "filter" });
+    appendLeft(genColumndata({ id: id, type: "Filetree" }));
   }
 }
 async function moveFileById(id, targetId, query) {
@@ -69,26 +75,6 @@ async function moveFileById(id, targetId, query) {
       !query ? refreshAll() : null;
     }
   );
-
-  /* window.核心api.sql({ stmt: sql }, "", (data) => {
-    if (data && data[1]) {
-      let fromBlock = data[0].id == id ? data[0] : data[1];
-      let toBlock = data[0].id == id ? data[1] : data[0];
-      window.核心api.moveDoc(
-        {
-          fromNotebook: fromBlock.box,
-          fromPath: fromBlock.path,
-          toNotebook: toBlock.box,
-          toPath: toBlock.path,
-        },
-        "",
-        (data) => {
-          console.log(window.layout);
-          !query ? refreshAll() : null;
-        }
-      );
-    }
-  });*/
 }
 function moveFileByNotebook(id, noteBook, query) {
   let sql = `select * from blocks where id ='${id}' `;
@@ -110,52 +96,56 @@ function moveFileByNotebook(id, noteBook, query) {
     }
   });
 }
-export function setId(idPath, index, noteBook) {
-  if (!window.layout[index]) {
-    return;
-  }
-  if (!idPath) {
-    window.layout[index]["id"] = "";
-  }
-  console.log(idPath, index);
-  if (idPath.length >= "20200812220555-lj3enxa".length) {
-    let id = idPath
-      .slice(-3 - "20200812220555-lj3enxa".length)
-      .slice(0, "20200812220555-lj3enxa".length);
-    window.layout[index]["id"] = id;
-  } else {
-    window.layout[index]["id"] = "";
-  }
-  if (noteBook) {
-    window.layout[index]["noteBook"] = noteBook;
-  }
-}
 export function remove(index) {
   window.layout.splice(index, 1);
   refreshAll();
 }
 export function refreshAll() {
+  console.log(window.layout)
   window.layout.forEach((element, i) => {
-    let json = JSON.parse(JSON.stringify(element));
+    let json1 = JSON.parse(JSON.stringify(element));
+    let json2 = JSON.parse(JSON.stringify(element["data"]));
+
     window.layout[i] = null;
+    console.log(i)
+    console.log(element)
     setTimeout(() => {
-      window.layout[i] = json;
+      window.layout[i] = json1;
+      window.layout[i]["data"]=json2
+      console.log(i,window.layout)
+
     }, 100);
   });
+
 }
 
-export function setNoteBook(noteBook, index) {
-  if (!window.layout[index]) {
-    return;
-  }
-  window.layout[index]["noteBook"] = noteBook;
-}
+
 export function refreshIndex(index) {
   let json = JSON.parse(JSON.stringify(window.layout[index]));
   window.layout[index] = null;
   setTimeout(() => {
     window.layout[index] = json;
   }, 100);
+}
+
+
+export function checkSelected(id) {
+  let flag = false;
+  let index = undefined;
+  for (let i = 0; i < window.selectedBlock.length; i++) {
+    let blockArray = window.selectedBlock[i];
+    index = JSON.stringify(blockArray).indexOf(id);
+    flag = index >= 0 ? true : false;
+    if (flag) {
+      console.log(flag);
+      console.log(JSON.stringify(blockArray), id, index);
+      console.log(JSON.stringify({ selected: flag, selectedBlockIndex: i }));
+      return JSON.stringify({
+        selected: flag,
+        selectedBlockIndex: (window.Digit && window.Digit.num) || i,
+      });
+    }
+  }
 }
 export function selectBlock(id) {
   console.log(window.selectedBlockIndex);
@@ -164,18 +154,18 @@ export function selectBlock(id) {
   selectedBlock.push(id);
 }
 export function UnSelectBlock(id) {
-  let selectedBlock = window.selectedBlock[window.selectedBlockIndex.value];
-
   if (window.ctrlKey) {
     UnSelectAllBlock();
     return;
   }
+  window.selectedBlock.forEach(selectedBlock=>{
+ 
   selectedBlock.forEach((item, index) => {
     item == id ? selectedBlock.splice(index, 1) : null;
     if (item == id && index == 0) {
       selectedBlock[0] = null;
     }
-  });
+  });})
 }
 export function UnSelectAllBlock() {
   let selectedBlock = window.selectedBlock[window.selectedBlockIndex.value];
@@ -190,14 +180,14 @@ export function insertColumn(index) {
     let stmt = `select * from blocks where id = '${str}'`;
     window.核心api.sql({ stmt: stmt }, "", (data) => {
       if (data && data[0]) {
-        appendRight({ id: data[0]["root_id"], type: "filter" });
+        appendRight({ id: data[0]["root_id"], type: "Filetree" });
         window.layout.splice(index + 1, 0, {
           id: data[0]["root_id"],
           type: "filter",
         });
         refreshAll();
       } else {
-        window.layout.splice(index + 1, 0, { id: "", type: "filter" });
+        window.layout.splice(index + 1, 0, genColumndata());
         refreshAll();
       }
     });
@@ -231,38 +221,24 @@ export function switchToLeft(index) {
   if (window.layout[index] && window.layout[index - 1]) {
     let JSON1 = JSON.parse(JSON.stringify(window.layout[index]));
     let JSON2 = JSON.parse(JSON.stringify(window.layout[index - 1]));
+
     window.layout[index] = null;
     window.layout[index - 1] = null;
+
     window.layout[index - 1] = JSON1;
     window.layout[index] = JSON2;
     refreshAll();
   }
 }
-export function checkSelected(id) {
-  let flag = false;
-  let index = undefined;
-  for (let i = 0; i < window.selectedBlock.length; i++) {
-    let blockArray = window.selectedBlock[i];
-    index = JSON.stringify(blockArray).indexOf(id);
-    flag = index >= 0 ? true : false;
-    if (flag) {
-      console.log(flag);
-      console.log(JSON.stringify(blockArray), id, index);
-      console.log(JSON.stringify({ selected: flag, selectedBlockIndex: i }));
-      return JSON.stringify({ selected: flag, selectedBlockIndex: window.Digit&&window.Digit.num||i });
-    }
+
+
+export function switchToPreviewer(index) {
+  if (window.layout[index]) {
+    window.layout[index].type = "Previewer";
   }
 }
-
-
-export function switchToPreviewer(index){
-  if(window.layout[index]){
-    window.layout[index].type='Previewer'
-  }
-}
-export function switchToFiletree(index){
-  if(window.layout[index]){
-    window.layout[index].type='Filetree'
-
+export function switchToFiletree(index) {
+  if (window.layout[index]) {
+    window.layout[index].type = "Filetree";
   }
 }

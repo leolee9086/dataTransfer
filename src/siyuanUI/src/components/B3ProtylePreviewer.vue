@@ -18,17 +18,14 @@ import B3DocTiltle from "./B3DocTiltle.vue";
 ///#endif
 let { options,index } = defineProps(["options","index"]);
 defineEmits(['dataChange'])
-let {id} = options
+let {id} = window.layout[index]
 let editorDOM = ref(null);
 let DocInfo = ref({});
 onMounted(() => {
-  initUI(id, DocInfo, editorDOM);
+  if(id){
+  initUI(id, DocInfo, editorDOM)
+  };
 });
-/*watch(
-  DocInfo,(value)=>{
-    console.log(value)
-  }
-)*/
 </script>
 <script>
 function initUI(id, DocInfo, editorDOM) {

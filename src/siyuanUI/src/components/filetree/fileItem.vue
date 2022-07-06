@@ -95,10 +95,12 @@
       v-if="!state.selected"
       @click="
         ($event) => {
+
           getIndex($event);
           $event.stopPropagation();
-          state.selected = true;
           selectBlock(file.id);
+                              state.selected = true;
+
         }
       "
       aria-label="选中"
@@ -114,9 +116,13 @@
       style="display: block"
       @click="
         ($event) => {
+
+          getIndex($event);
           $event.stopPropagation();
-          state.selected = false;
-          UnSelectBlock(file.id);
+
+          UnSelectBlock(file.id, state.selectedBlockIndex);
+                                        state.selected = false;
+
         }
       "
       aria-label="取消"
@@ -135,35 +141,34 @@ import {
   UnSelectBlock,
   checkSelected,
 } from "../../../../util/columnHandeler";
-import { reactive, getCurrentInstance ,watch} from "vue";
+import { reactive, getCurrentInstance, watch } from "vue";
 const emit = defineEmits(["open"]);
 let { file, index } = defineProps(["file", "index"]);
 let state = reactive({
   selected: false,
-  selectedBlockIndex: window.selectedBlockIndex.value || window.selectedBlockIndex,
+  selectedBlockIndex: window.selectedBlockIndex.value + 0,
 });
-getstate()
+getstate();
 function getstate() {
-  let selectedstate = checkSelected(file.id);
-  console.log("测试", selectedstate);
-  if (selectedstate) {
+  //遍历查找是否选中以及选择组序号
+  let selectedstate = checkSelected(file.id) + "";
+  console.log("测试1111111", selectedstate);
+  if (selectedstate && selectedstate !== "undefined") {
     selectedstate = JSON.parse(selectedstate);
     state.selected = selectedstate.selected;
     state.selectedBlockIndex = selectedstate.selectedBlockIndex;
-  }
-  else{
-    state.selected=false
-    state.selectedBlockIndex=undefined
-  }
+  } 
 }
 
-watch(window.selectedBlock,()=>{getstate() })
+watch(window.selectedBlock, () => {
+  console.log(window.selectedBlock);
+  getstate();
+});
 let icon = file && file.icon ? "\#icon\-" + file.icon : "\#icon-1f4c4";
 
 function getIndex(event) {
-    state.selectedBlockIndex = window.selectedBlockIndex.value;
-  
-  }
+  state.selectedBlockIndex = window.selectedBlockIndex.value;
+}
 function 打开() {
   let link = window.document.createElement("a");
   link.setAttribute("href", `siyuan://blocks/${file.id}`);

@@ -1,6 +1,8 @@
 <template>
   <teleport to="body">
-    <B3Dock position="Top"></B3Dock>
+    <template v-if="!isApp.value">
+    <B3Dock position="Top">
+    </B3Dock>
     <div class="fn__flex fn__flex-1">
       <B3Dock
         :vertical="true"
@@ -58,7 +60,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
       <div class="fn__flex fn__flex-1">
         <template v-for="(item, i) in layoutArray.layout">
           <template v-if="item">
-            <B3layoutColumn @dblclick="向右扩展;" :options="item" :index="i">
+            <B3layoutColumn @dblclick="appendRight;" :options="item" :index="i">
             </B3layoutColumn>
           </template>
         </template>
@@ -79,6 +81,13 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
                 ><a href="https://afdian.net/@leolee9086">请作者喝杯咖啡</a></span
               >
             </div>
+             <div class="b3-list-item" id="editorEmptySearch">
+              <svg class="b3-list-item__graphic">
+                <use xlink:href="#iconGithub"></use></svg
+              ><span
+                ><a target="blank" href="https://github.com/leolee9086/dataTransfer">GitHub</a></span
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -89,24 +98,32 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
       ></B3Dock>
     </div>
     <B3Dock position="Bottom"></B3Dock>
+    </template>
+    <template v-if="isApp.value">
+      <button><a href="/widgets/dataTransfer" @click="openOut">请在浏览器打开使用</a></button>
+    </template>
   </teleport>
+  
 </template>
 <script setup>
 import { ref, reactive, nextTick } from "vue";
-import B3ProtylePreviewer from "./siyuanUI/src/components/B3ProtylePreviewer.vue";
 import B3layoutColumn from "./siyuanUI/src/components/B3layoutColumn.vue";
-import B3TabBar from "./siyuanUI/src/components/B3TabBar.vue";
 import { appendRight } from "./util/columnHandeler";
+import {genColumndata} from "./util/dataHandler"
 import { debounce } from "./util/event.js";
+const openOut = function(){
+  window.parent.open('/widgets/dataTransfer')
 
+}
 const layoutArray = reactive({
-  layout: [{ id: "20210428212840-859h45j", type: "filter" }],
+  layout: [genColumndata()],
   selectedBlock: [[], [], [], [], [], [], [], [], [], [], [], [], []],
   selectedBlockIndex: { value: 0 },
 });
+const notebooks =  reactive({value:[]})
+window.notebooks =notebooks
 const tempBoxShow = reactive({ value: false });
 function showTempBox(num) {
-  console.log(num, layoutArray.selectedBlockIndex.value);
   if (num + "" == layoutArray.selectedBlockIndex.value + "") {
     debounce(() => {
       tempBoxShow.value = !tempBoxShow.value;
@@ -116,20 +133,18 @@ function showTempBox(num) {
   layoutArray.selectedBlockIndex.value = num;
   window.selectedBlockIndex = layoutArray.selectedBlockIndex;
 }
+const isApp=reactive({value:true})
+if(window==window.top){
+  isApp.value =false
+}
+const hasrequire=reactive({value:true})
+if(window.require){
+  hasrequire.value =true
+}
 
 window.layout = layoutArray.layout;
 window.selectedBlock = layoutArray.selectedBlock;
 window.selectedBlockIndex = layoutArray.selectedBlockIndex;
-function 向右扩展() {
-  appendRight();
-}
-window.eventBus.on("expend", (data) => {
-  console.log(data);
-  layoutArray.value.push(data);
-});
-window.eventBus.on("move", (data) => {
-  let idx = data.index;
-});
 window.addEventListener("keydown", (event) => {
   if (event.ctrlKey) {
     window.ctrlKey = true;
