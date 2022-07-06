@@ -44,7 +44,7 @@ export function setName(name, index) {
   window.layout[index]["data"].name = window.layout[index].name = name;
 }
 export function goToPath(noteBook, path, index) {
-  console.log(window.layout[index]);
+  console.log(window.layout[index],index);
   let currentdata = window.layout[index]["data"];
 
   window.核心api.listDocsByPath(

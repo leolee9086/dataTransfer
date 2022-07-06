@@ -78,7 +78,7 @@
         </template>
       </div>
     </div>
-    <div class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
+    <div ref = "noteBooksListDom" class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
       <template v-for="(item, i) in notebooks.value" v-if="notebooks">
         <notebookItem
           @click="goToPath(item.id, '/',index)"
@@ -88,14 +88,24 @@
         </notebookItem>
       </template>
     </div>
-    <div class="fn__flex-1 Filetree" data-type="navigation" v-if="currentdata.subtype == 'Filetree'">
+    <div ref="docListDom"  
+    class="fn__flex-1 Filetree" 
+    data-type="navigation" 
+    v-if="currentdata.subtype == 'Filetree'"
+    @scroll="()=>genVisiable('doc')"
+    >
       <ul class>
-        <template v-for="(item, i) in currentdata.files" :key="item.id + i + index+''">
+        <template 
+        v-for="(item, i) in currentdata.files" 
+        :key="item.id + i + index+''"
+        >
+        <template   v-if='i<visiableMaxIndex.value'>
           <fileItem
             :file="item"
             @click="goToPath(currentdata.noteBook, item.path,index)"
             :index="index"
           ></fileItem>
+          </template>
         </template>
       </ul>
     </div>
@@ -119,15 +129,34 @@ import {
   getNotebooks
 } from "../../../util/dataHandler"
 const emit = defineEmits(["最小化"]);
-
 let { options, index } = defineProps(["options", "index"]);
 console.log(options);
 console.log(window.layout[index]);
-let { type, id, noteBook } = options;
+let { type, id, noteBook } = options.data;
 let realtype = "" + type;
 realtype = ref(realtype);
 let currentdata = window.layout[index]["data"];
-    let notebooks = window.notebooks
+let notebooks = window.notebooks
+
+let visiableMaxIndex = reactive({value:window.innerHeight/30})
+
+
+let noteBooksListDom= ref(null)
+let docListDom = ref(null)
+const genVisiable=function(type){
+  let containerScrollHeight
+  let containerInnerHeight 
+  if(type=="doc"&&docListDom.value){
+    console.log(docListDom)
+    containerScrollHeight = docListDom.value.scrollTop
+    containerInnerHeight =docListDom.value.offsetHeight
+  }
+  visiableMaxIndex.value=(containerScrollHeight+containerInnerHeight)/28
+    console.log(visiableMaxIndex)
+
+}
+
+
 onMounted(() => {
   if (id) {
     console.log(index)
@@ -141,7 +170,11 @@ onMounted(() => {
     });
   }
   if (!id && noteBook) {
-    goToPath(noteBook, "/");
+    goToPath(noteBook, "/",index);
+  }
+  else{
+    getNotebooks(index);
+
   }
 });
 let realid = "" + id;

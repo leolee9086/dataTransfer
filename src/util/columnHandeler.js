@@ -16,14 +16,18 @@ export function moveRight(id, index) {
   }
   console.log(id, index);
   let targetIndex = index + 1;
-  console.log(window.layout);
+  console.log(window.layout,window.layout[targetIndex]);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]["noteBook"]);
+    if (!targetId && window.layout[targetIndex]['data']["noteBook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]['data']["noteBook"]);
       return;
     }
-    moveFileById(id, targetId);
+    else if(!targetId && !window.layout[targetIndex]['data']["noteBook"]){
+     
+      return
+    }
+    else{moveFileById(id, targetId);}
   } else {
     appendRight(
       genColumndata(window.layout[index])
