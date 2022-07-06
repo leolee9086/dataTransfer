@@ -59,8 +59,9 @@ const switchToFiletree = function () {
 
     <div
       ref="container"
-      v-if="!autoWidth"
+      v-if="!autoWidth&&realoptions"
       class="fn__flex-column fn__flex-1"
+
       :style="`width: ${size.width}px; transition: var(--b3-width-transition);`"
     >
       <component

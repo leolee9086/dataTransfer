@@ -11,11 +11,12 @@
 
 </template>
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive ,watch} from "vue";
+import { getContenteditableElement } from "../../../protyle/row/protyle/wysiwyg/getBlock";
 import B3DocTiltle from "./B3DocTiltle.vue";
 ///if!BROWSER
 ///#endif
-let { options } = defineProps(["options"]);
+let { options,index } = defineProps(["options","index"]);
 defineEmits(['dataChange'])
 let {id} = options
 let editorDOM = ref(null);
@@ -23,6 +24,11 @@ let DocInfo = ref({});
 onMounted(() => {
   initUI(id, DocInfo, editorDOM);
 });
+/*watch(
+  DocInfo,(value)=>{
+    console.log(value)
+  }
+)*/
 </script>
 <script>
 function initUI(id, DocInfo, editorDOM) {
@@ -32,6 +38,12 @@ function initUI(id, DocInfo, editorDOM) {
       console.log(data);
       console.log(editorDOM);
       editorDOM.value.innerHTML = data.content;
+      let blockDom =editorDOM.value.querySelectorAll("[contenteditable]")
+      if(blockDom[0]){
+        blockDom.forEach(
+          blockElement=>blockElement.setAttribute("contenteditable",false)
+        )
+      }
       docData = data;
     }
   });
