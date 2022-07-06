@@ -70,10 +70,19 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
                 <use xlink:href="#iconSearch"></use></svg
               ><span>搜索</span><span class="b3-list-item__meta">Ctrl+P</span>
             </div>
+            <div class="b3-list-item" id="editorEmptySearch">
+              <svg class="b3-list-item__graphic">
+                <use xlink:href="#iconHelp"></use></svg
+              ><span
+                ><a href="https://www.chuanchengsheji.com/">关于dataTransfer</a></span
+              >
+            </div>
               <div class="b3-list-item" id="editorEmptySearch">
               <svg class="b3-list-item__graphic">
                 <use xlink:href="#iconHelp"></use></svg
-              ><span>关于</span><span class="b3-list-item__meta">Ctrl+P</span>
+              ><span
+                ><a href="https://afdian.net/@leolee9086">赞助我们</a></span
+              >
             </div>
           </div>
         </div>
