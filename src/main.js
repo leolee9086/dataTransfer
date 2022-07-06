@@ -26,8 +26,7 @@ window.__dirname = ""
 window.layout=[]
 window.selectedBlock=[]
 
-const LUTE = await import ('./stage/js/lute/lute.min.js')
-console.log(LUTE)
+//const LUTE = await import ('./stage/js/lute/lute.min.js')
 const 核心api = new kernelApiList()
 const eventBus =new EventBus()
 window.eventBus = eventBus

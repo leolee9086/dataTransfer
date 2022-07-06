@@ -2,31 +2,43 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vitePluginIfdef from 'vite-plugin-ifdef'
 
-import electron from './vite-electron'
 let path = require('path')
 export default defineConfig({
   plugins: [
     vue(),
     vitePluginIfdef(),
-    electron({
-
-    }),  ],
+    ],
   "ifdef-define":{
     BROWSER: true,
     MOBILE:false, 
-    _DEBUG: 1 ,
+    DEBUG: true ,
   },
   'ifdef-option':{verbose: true},
   build:{
-    outDir:"f:/siyuan/data/widgets/vitetest",
+    target:["chrome99"],
+    outDir:"f:/siyuan/data/widgets/dataTransfer",
     assetsDir:'./src',
-    emptyOutDir:true,
+    emptyOutDir:false,
+    rollupOptions:{
+    },
+    "ifdef-define":{
+      BROWSER: false,
+      MOBILE:false, 
+      DEBUG: false ,
+    },
+    'ifdef-option':{verbose: true},
+  
   },
   base: './',
   server:{
     proxy:{
       "/stage":{
         target:"http://127.0.0.1:6806/stage",
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/stage/, '')
+      },
+      "/stage/js":{
+        target:"http://127.0.0.1:6806/stage/js",
         changeOrigin: true,
         rewrite: path => path.replace(/^\/stage/, '')
       },

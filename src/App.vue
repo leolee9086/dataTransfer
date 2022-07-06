@@ -64,12 +64,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
         </template>
         <div class="fn_flex fn__flex-1" style="min-width: 300px">
           <div class="layout__empty b3-list" style="text-align: center">
-            <h2>双击增加分栏</h2>
-            <div class="b3-list-item" id="editorEmptySearch">
-              <svg class="b3-list-item__graphic">
-                <use xlink:href="#iconSearch"></use></svg
-              ><span>搜索</span><span class="b3-list-item__meta">Ctrl+P</span>
-            </div>
+           
             <div class="b3-list-item" id="editorEmptySearch">
               <svg class="b3-list-item__graphic">
                 <use xlink:href="#iconHelp"></use></svg
@@ -81,7 +76,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
               <svg class="b3-list-item__graphic">
                 <use xlink:href="#iconHelp"></use></svg
               ><span
-                ><a href="https://afdian.net/@leolee9086">赞助我们</a></span
+                ><a href="https://afdian.net/@leolee9086">请作者喝杯咖啡</a></span
               >
             </div>
           </div>
