@@ -159,9 +159,7 @@ export function refreshIndex(index) {
 }
 export function selectBlock(id) {
   console.log(window.selectedBlockIndex);
-
   let selectedBlock = window.selectedBlock[window.selectedBlockIndex.value];
-
   console.log(window.selectedBlockIndex, selectedBlock);
   selectedBlock.push(id);
 }
@@ -249,10 +247,9 @@ export function checkSelected(id) {
     flag = index >= 0 ? true : false;
     if (flag) {
       console.log(flag);
-
       console.log(JSON.stringify(blockArray), id, index);
       console.log(JSON.stringify({ selected: flag, selectedBlockIndex: i }));
-      return JSON.stringify({ selected: flag, selectedBlockIndex: i });
+      return JSON.stringify({ selected: flag, selectedBlockIndex: window.Digit&&window.Digit.num||i });
     }
   }
 }

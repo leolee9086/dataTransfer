@@ -95,7 +95,7 @@
       v-if="!state.selected"
       @click="
         ($event) => {
-          getIndex();
+          getIndex($event);
           $event.stopPropagation();
           state.selected = true;
           selectBlock(file.id);
@@ -160,8 +160,9 @@ function getstate() {
 watch(window.selectedBlock,()=>{getstate() })
 let icon = file && file.icon ? "\#icon\-" + file.icon : "\#icon-1f4c4";
 
-function getIndex() {
+function getIndex(event) {
     state.selectedBlockIndex = window.selectedBlockIndex.value;
+  
   }
 function 打开() {
   let link = window.document.createElement("a");

@@ -80,63 +80,6 @@ import B3TabBar from "./siyuanUI/src/components/B3TabBar.vue";
 import { appendRight } from "./util/columnHandeler";
 import { debounce } from "./util/event.js";
 
-window.addEventListener("keydown", (event) => {
-  if (event.ctrlKey) {
-    window.ctrlKey = true;
-  }
-  if (event.shiftKey) {
-    window.shiftKey = true;
-  }
-  if (event.altKey) {
-    window.altKey = true;
-  }
-  if (!event.repeat) {
-    for (let num of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-      if (num <= 4 && event.code == "Digit" + num && window.altKey && window.shiftKey) {
-        showTempBox(num + 9)
-        event.stopPropagation();
-        event.preventDefault();
-
-        return;
-      }
-      if (event.key == num + "" && window.altKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        showTempBox(num)
-        event.stopPropagation();
-        event.preventDefault();
-      }
-    }
-  }
-});
-window.addEventListener("keyup", (event) => {
-  window.ctrlKey = false;
-
-  window.shiftKey = false;
-
-  window.altKey = false;
-});
-window.addEventListener("paste", ($event) => {
-  $event.stopPropagation();
-  let clipboardData = $event.clipboardData;
-
-  if (!(clipboardData && clipboardData.items)) {
-    return;
-  }
-  for (var i = 0, len = clipboardData.items.length; i < len; i++) {
-    var item = clipboardData.items[i];
-    if (item.kind === "string" && item.type == "text/plain") {
-      item.getAsString((str) => {
-        let stmt = `select * from blocks where id = '${str}'`;
-        window.核心api.sql({ stmt: stmt }, "", (data) => {
-          if (data && data[0]) {
-            appendRight({ id: data[0]["root_id"], type: "filter" });
-          }
-        });
-      });
-    }
-  }
-});
 const layoutArray = reactive({
   layout: [{ id: "20210428212840-859h45j", type: "filter" }],
   selectedBlock: [[], [], [], [], [], [], [], [], [], [], [], [], []],
@@ -166,7 +109,68 @@ window.eventBus.on("expend", (data) => {
 window.eventBus.on("move", (data) => {
   let idx = data.index;
 });
-console.log("ceshi1", layoutArray);
+window.addEventListener("keydown", (event) => {
+  if (event.ctrlKey) {
+    window.ctrlKey = true;
+  }
+  if (event.shiftKey) {
+    window.shiftKey = true;
+  }
+  if (event.altKey) {
+    window.altKey = true;
+  }
+  
+  if (!event.repeat) {
+    for (let num of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+      if (num <= 4 && event.code == "Digit" + num && window.altKey && window.shiftKey) {
+        showTempBox(num + 9)
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+      }
+      if (event.key == num + "" && window.altKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        showTempBox(num)
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      if(num&&(event.code=='Digit' + num||event.key==num)){
+        window.Digit = {num:num}
+        event.stopPropagation();
+        event.preventDefault();1
+      }
+    }
+  }
+});
+window.addEventListener("keyup", (event) => {
+  window.ctrlKey = false;
+  window.shiftKey = false;
+  window.altKey = false;
+  window.Digit={num:undefined}
+});
+window.addEventListener("paste", ($event) => {
+  $event.stopPropagation();
+  let clipboardData = $event.clipboardData;
+
+  if (!(clipboardData && clipboardData.items)) {
+    return;
+  }
+  for (var i = 0, len = clipboardData.items.length; i < len; i++) {
+    var item = clipboardData.items[i];
+    if (item.kind === "string" && item.type == "text/plain") {
+      item.getAsString((str) => {
+        let stmt = `select * from blocks where id = '${str}'`;
+        window.核心api.sql({ stmt: stmt }, "", (data) => {
+          if (data && data[0]) {
+            appendRight({ id: data[0]["root_id"], type: "filter" });
+          }
+        });
+      });
+    }
+  }
+});
+
 </script>
 <style>
 .dock--vertical {

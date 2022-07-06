@@ -90,11 +90,12 @@
     </div>
     <div class="fn__flex-1" data-type="navigation" v-if="realtype == 'files'">
       <ul class>
-        <template v-for="(item, i) in currentdata.files" :key="item.id">
+        <template v-for="(item, i) in currentdata.files" :key="item.id+i+index">
           <fileItem
             :file="item"
             @click="goToPath(currentdata.noteBook, item.path)"
             :index="index"
+         
           ></fileItem>
         </template>
       </ul>
