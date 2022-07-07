@@ -21,7 +21,8 @@ const { options, resizeable, autoHeight, autoWidth, index } = defineProps([
  // realoptions = value;
 //});
 //console.log(window.layout[index])
-let size = reactive({
+let size 
+options&&options.data.size?size=options.data.size:size = reactive({
   width: 350,
   htight: 350,
 });

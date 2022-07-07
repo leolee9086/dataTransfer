@@ -14,6 +14,8 @@ export function genColumndata(options) {
       pathArray: [],
       nameDict: {},
       name: "",
+      size:{width: 350,
+        htight: 350,}
     },
   };
   if (options) {
