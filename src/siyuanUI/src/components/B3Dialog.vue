@@ -3,11 +3,14 @@
     <div class="b3-dialog">
       <div class="b3-dialog__scrim" v-if="scrim"></div>
       <div class="b3-dialog__container" :style="`width:${width ? width : '80vw'}`">
-        <svg class="b3-dialog__close fn__a" v-if="closeButton">
+        <svg class="b3-dialog__close fn__a" @click="close" v-if="closeButton">
           <use xlink:href="#iconClose"></use>
         </svg>
         <div class="b3-dialog__header" v-if="header">
           {{ header }}
+          <slot name="header"></slot>
+        </div>
+        <div class="b3-dialog__header">
           <slot name="header"></slot>
         </div>
         <div :style="`height:${height}`">
@@ -17,9 +20,32 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: "B3Dialog",
-  props: ["options", "center", "value", "scrim", "dialogIf", "closeButton"],
+<script setup>
+import { defineEmits, defineProps, reactive } from "vue";
+const {
+  options,
+  center,
+  value,
+  scrim,
+  dialogIf,
+  closeButton,
+  header,
+  height,
+  width,
+} = defineProps([
+  "options",
+  "center",
+  "value",
+  "scrim",
+  "dialogIf",
+  "closeButton",
+  "header",
+  "height",
+  "width",
+]);
+const emit = defineEmits(["close"]);
+
+const close = function () {
+  emit("close");
 };
 </script>

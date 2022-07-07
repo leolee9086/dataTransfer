@@ -2,11 +2,12 @@
   <div
     class="fn__flex fn_flex-column layout-tab-bar dock dock--vertical"
     :style="
-      state.selected&&state.selectedBlockIndex
+      state.selected && state.selectedBlockIndex
         ? `
         color:var(--b3-font-background${state.selectedBlockIndex}) !important;
         background-color:var(--b3-font-background${state.selectedBlockIndex});
-        border:solid var(--b3-font-color${state.selectedBlockIndex||2}) 1px;
+        border:solid var(--b3-font-color${state.selectedBlockIndex || 2}) 1px;
+        box-sizing:border-box
         `
         : null
     "
@@ -109,43 +110,65 @@
             <use xlink:href="#iconContract"></use>
           </svg>
         </div>
-        <template v-if="currentData&&currentData.path&&(!currentData.path.endsWith('/')&&currentData.path!=='.sy')">
-
-        <div
-          v-if="!state.selected"
-          @click="
-            () => {
-              state.selected = true;
-          getIndex($event);
-
-              selectBlock(currentData.id);
-            }
+        <template
+          v-if="
+            !(currentData &&
+            currentData.path &&
+            !currentData.path.endsWith('/') &&
+            currentData.path !== '.sy')
           "
-          class="dock__item b3-tooltips b3-tooltips__sw"
         >
-          <svg>
-            <use xlink:href="#iconAdd"></use>
-          </svg>
-        </div>
-
-        <div
-          v-if="state.selected"
-          @click="
-            () => {
-                        getIndex($event);
-
-              state.selected = false;
-              UnSelectBlock(currentData.id);
-            }
+               <div
+         
+            class="dock__item b3-tooltips b3-tooltips__sw"
+          >
+            <svg>
+              <use xlink:href="#icon-1f3e0"></use>
+            </svg>
+          </div>
+        </template>
+        <template
+          v-if="
+            currentData &&
+            currentData.path &&
+            !currentData.path.endsWith('/') &&
+            currentData.path !== '.sy'
           "
-          class="dock__item b3-tooltips b3-tooltips__sw"
         >
-          <svg>
-            <use xlink:href="#iconMin"></use>
-          </svg>
-        </div>
-                        </template>
+          <div
+            v-if="!state.selected"
+            @click="
+              () => {
+                state.selected = true;
+                getIndex($event);
 
+                selectBlock(currentData.id);
+              }
+            "
+            class="dock__item b3-tooltips b3-tooltips__sw"
+          >
+            <svg>
+              <use xlink:href="#iconAdd"></use>
+            </svg>
+          </div>
+
+          <div
+            v-if="state.selected"
+            @click="
+              () => {
+                getIndex($event);
+
+                state.selected = false;
+                UnSelectBlock(currentData.id);
+              }
+            "
+            class="dock__item b3-tooltips b3-tooltips__sw"
+          >
+            <svg>
+              <use xlink:href="#iconMin"></use>
+            </svg>
+          </div>
+        </template>
       </div>
     </div>
     <div class="fn_flex" style="writing-mode: vertical-lr !important; text-align: center">
@@ -154,7 +177,7 @@
         style="margin: 0%"
       >
         <div
-          contenteditable="true"
+          contenteditable="false"
           spellcheck="false"
           style="outline: none"
           ref="titleDOM"
@@ -165,7 +188,7 @@
       </div>
       <div></div>
     </div>
-    <div class="fn_flex fn_flex-1"></div>
+    <div class="fn_flex fn_flex-1" :data="JSON.stringify(state)"></div>
   </div>
 </template>
 <script setup>
@@ -191,14 +214,17 @@ let { options, index } = defineProps(["options", "index", "docInfo"]);
 
 let titleDOM = ref(null);
 let DocInfo = ref({});
-let currentData = window.layout[index]["data"];
+let currentData = reactive(window.layout[index]["data"]);
 let state = reactive({
   selected: false,
   selectedBlockIndex: window.selectedBlockIndex.value + 0,
 });
-getstate();
+if(currentData.id){
+getstate();}
 
 watch(window.layout, (value) => {
+  getstate();
+
   window.layout[index] ? (currentData = window.layout[index]["data"]) : null;
 });
 const onInput = function () {
@@ -220,27 +246,35 @@ const onInput = function () {
     }
   );
 };
-
-
+watch(options,()=>{
+getstate()
+})
 watch(window.selectedBlock, () => {
   console.log(window.selectedBlock);
   getstate();
 });
-watch(currentData,()=>{
-    getstate();
-
-})
+watch(currentData, () => {
+  getstate();
+});
+watch(DocInfo, () => {
+  getstate();
+},{deep:true});
 function getIndex(event) {
   state.selectedBlockIndex = window.selectedBlockIndex.value;
 }
 
 function getstate() {
   //遍历查找是否选中以及选择组序号
+  console.log(currentData.id)
   let selectedstate = checkSelected(currentData.id) + "";
   if (selectedstate && selectedstate !== "undefined") {
     selectedstate = JSON.parse(selectedstate);
     state.selected = selectedstate.selected;
     state.selectedBlockIndex = selectedstate.selectedBlockIndex;
+  }
+  else {
+    state.selected=false
+    state.selectedBlockIndex=undefined
   }
 }
 
@@ -248,5 +282,4 @@ watch(window.selectedBlock, () => {
   console.log(window.selectedBlock);
   getstate();
 });
-
 </script>

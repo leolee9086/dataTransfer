@@ -63,6 +63,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => path.replace(/^\/appearance/, '')
       },
+    
     },
     cors: {
       allowedHeaders:['Content-Type', 'Authorization']

@@ -82,7 +82,6 @@ const ondragsover = function (event) {
           :is="options.type == 'Filetree' ? 'B3Filetree' : 'B3ProtylePreviewer'"
           :options="options"
         ></component>
-                {{options}}
 
       </template>
     </div>

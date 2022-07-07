@@ -141,7 +141,7 @@ export function checkSelected(id) {
     let blockArray = window.selectedBlock[i];
     index = JSON.stringify(blockArray).indexOf(id);
     flag = index >= 0 ? true : false;
-    if (flag) {
+    if (flag&&id) {
       console.log(flag);
       console.log(JSON.stringify(blockArray), id, index);
       console.log(JSON.stringify({ selected: flag, selectedBlockIndex: i }));

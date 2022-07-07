@@ -1,5 +1,7 @@
 import { ID_Length } from "./constants.js";
-
+export function getLayout(){
+  
+}
 export function genColumndata(options) {
   let data = {
     id: "20200812220555-lj3enxa",
@@ -129,6 +131,7 @@ export function setId(idPath, index, noteBook) {
   if (idPath.length >= ID_Length) {
     let id = idPath.slice(-3 - ID_Length).slice(0, ID_Length);
     window.layout[index]["data"]["id"] = id;
+    window.layout[index]['id']=id
   } else {
     window.layout[index]["data"]["id"] = "";
   }
