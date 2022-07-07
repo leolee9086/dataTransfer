@@ -24,7 +24,7 @@ const { options, resizeable, autoHeight, autoWidth, index } = defineProps([
 let size 
 options&&options.data.size?size=options.data.size:size = reactive({
   width: 350,
-  htight: 350,
+  height: 350,
 });
 let dragging = false;
 const container = ref(null);
@@ -35,7 +35,7 @@ const ondragstart = () => {
 };
 const ondargging = () => {
   if (dragging) {
-    size.width = event.clientX - container.value.offsetLeft;
+    size.width = event.clientX - container.value.offsetLeft+container.value.parentElement.parentElement.scrollLeft;
   }
 };
 const ondragsover = function (event) {

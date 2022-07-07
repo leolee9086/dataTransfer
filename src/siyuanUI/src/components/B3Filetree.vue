@@ -41,7 +41,7 @@
       <span
         data-type="min"
         class="block__icon b3-tooltips b3-tooltips__sw"
-        @click="最小化文档树;"
+        @click="()=>{miniMize(index)}"
         aria-label="最小化 Ctrl+W"
       >
         <svg>
@@ -117,6 +117,7 @@ import {
   moveLeft,
   selectBlock,
   moveTemp,
+  miniMize
 } from "../../../util/columnHandeler";
 import { reactive, watch, onMounted, ref } from "vue";
 import notebookItem from "./filetree/notebookItem.vue";
@@ -137,10 +138,7 @@ let realtype = "" + type;
 realtype = ref(realtype);
 let currentdata = window.layout[index]["data"];
 let notebooks = window.notebooks
-
 let visiableMaxIndex = reactive({value:window.innerHeight/30})
-
-
 let noteBooksListDom= ref(null)
 let docListDom = ref(null)
 const genVisiable=function(type){
@@ -153,7 +151,6 @@ const genVisiable=function(type){
   }
   visiableMaxIndex.value=(containerScrollHeight+containerInnerHeight)/28
     console.log(visiableMaxIndex)
-
 }
 
 
@@ -218,11 +215,7 @@ function goToParent() {
 
 
 let view = reactive({ 最小化: false });
-const 最小化文档树 = () => {
-  view.最小化 = true;
-  console.log(view.最小化);
-  emit("最小化");
-};
+
 function fileTreeMenuShow() {
   window.eventBus.emit("menuShow", {});
 }

@@ -11,7 +11,7 @@ export function appendLeft(options = genColumndata()) {
 }
 export function moveRight(id, index) {
   if (window.ctrlKey) {
-    appendRight({ id: id, type: "Filetree" });
+    appendRight(genColumndata({ id: id, type: "Filetree" }));
     return;
   }
   console.log(id, index);
@@ -29,7 +29,7 @@ export function moveRight(id, index) {
     else{moveFileById(id, targetId);}
   } else {
     appendRight(
-      genColumndata(window.layout[index])
+      genColumndata({ id: id, type: "Filetree" })
     );
   }
 }
@@ -52,7 +52,7 @@ export function moveLeft(id, index) {
     }
     moveFileById(id, targetId);
   } else {
-    appendLeft(genColumndata(window.layout[index]));
+    genColumndata({ id: id, type: "Filetree" })
   }
 }
 async function moveFileById(id, targetId, query) {
@@ -246,5 +246,13 @@ export function switchToPreviewer(index) {
 export function switchToFiletree(index) {
   if (window.layout[index]) {
     window.layout[index].type = "Filetree";
+  }
+}
+export function miniMize(index){
+  let currentdata = window.layout[index]["data"];
+  if(currentdata){
+    currentdata.rowSize=currentdata.size
+
+    currentdata.size={width:0,height:200}
   }
 }
