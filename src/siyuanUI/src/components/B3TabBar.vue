@@ -127,7 +127,6 @@
             <use xlink:href="#iconAdd"></use>
           </svg>
         </div>
-                </template>
 
         <div
           v-if="state.selected"
@@ -145,6 +144,8 @@
             <use xlink:href="#iconMin"></use>
           </svg>
         </div>
+                        </template>
+
       </div>
     </div>
     <div class="fn_flex" style="writing-mode: vertical-lr !important; text-align: center">
@@ -225,6 +226,10 @@ watch(window.selectedBlock, () => {
   console.log(window.selectedBlock);
   getstate();
 });
+watch(currentData,()=>{
+    getstate();
+
+})
 function getIndex(event) {
   state.selectedBlockIndex = window.selectedBlockIndex.value;
 }
