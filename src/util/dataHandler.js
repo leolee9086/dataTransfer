@@ -50,7 +50,6 @@ export function setName(name, index) {
 export function goToPath(noteBook, path, index) {
   console.log(window.layout[index],index);
   let currentdata = window.layout[index]["data"];
-
   window.核心api.listDocsByPath(
     { path: path, notebook: noteBook },
     "",
@@ -67,10 +66,10 @@ export function goToPath(noteBook, path, index) {
         setId(path, index);
         setNoteBook(noteBook, index);
         window.layout[index].id=currentdata.id
-
       }
     }
   );
+  
 }
 export function getHpath(index) {
   let currentdata = window.layout[index]["data"];
@@ -90,6 +89,9 @@ export function getNotebookConf(index) {
     "",
     (data) => {
       currentdata.noteBookConf = data;
+      if(currentdata.path=='/'){
+        currentdata.name=data.name
+      }
     }
   );
 }
@@ -104,11 +106,16 @@ export function getPathItemInfor(pathItem, index) {
   let currentdata = window.layout[index]["data"];
 
   let id = pathItem.slice(0, "20210808180117-czj9bvb".length);
+
   let sql = `select * from blocks where id = '${id}'`;
   window.核心api.sql({ stmt: sql }, "", (data) => {
     console.log(data);
     data && data[0] ? (currentdata.nameDict[pathItem] = data[0]) : null;
     console.log(currentdata.nameDict);
+    if(pathItem.endsWith('.sy')&&data&&data[0]){
+      currentdata.name=data[0]['content']
+    }
+    
   });
 }
 export function setId(idPath, index, noteBook) {

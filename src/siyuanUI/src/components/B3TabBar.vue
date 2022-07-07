@@ -123,7 +123,10 @@ let { options, index } = defineProps(["options", "index", "docInfo"]);
 let titleDOM = ref(null);
 let DocInfo = ref({});
 let currentData = window.layout[index]['data']
-
+watch(window.layout,(value)=>{
+   window.layout[index]?
+  currentData = window.layout[index]['data']:null
+})
 const onInput = function () {
   window.核心api.renameDoc({
     path: DocInfo.value.path,
