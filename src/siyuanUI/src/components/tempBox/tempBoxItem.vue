@@ -20,7 +20,10 @@
       @click="
         ($event) => {
           $event.stopPropagation();
-          moveRight(block.value.id, undefined);
+          appendLeft({
+            id:block.value.id
+            }
+            );
         }
       "
       aria-label="在右侧打开"
@@ -53,7 +56,8 @@ import {
   moveLeft,
   selectBlock,
   UnSelectBlock,
-  checkSelected
+  checkSelected,
+  appendLeft
 } from "../../../../util/columnHandeler";
 
 import { onMounted, reactive } from "vue";

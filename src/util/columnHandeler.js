@@ -1,13 +1,13 @@
 import {ID_Length} from './constants.js'
 import {genColumndata} from "./dataHandler"
 export function appendRight(options = genColumndata()) {
-  window.layout.push(options);
+  window.layout.push(genColumndata(options));
   refreshAll();
 
 }
 export function appendLeft(options = genColumndata()) {
-  window.layout.unshift(options);
- // refreshAll();
+  window.layout.unshift(genColumndata(options));
+  refreshAll();
 }
 export function moveRight(id, index) {
   if (window.ctrlKey) {
@@ -24,7 +24,6 @@ export function moveRight(id, index) {
       return;
     }
     else if(!targetId && !window.layout[targetIndex]['data']["noteBook"]){
-     
       return
     }
     else{moveFileById(id, targetId);}
@@ -44,13 +43,16 @@ export function moveLeft(id, index) {
   console.log(window.layout);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]["noteBook"]);
+    if (!targetId && window.layout[targetIndex]['data']["noteBook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]['data']["noteBook"]);
       return;
+    }
+    else if(!targetId && !window.layout[targetIndex]['data']["noteBook"]){
+      return
     }
     moveFileById(id, targetId);
   } else {
-    appendLeft(genColumndata({ id: id, type: "Filetree" }));
+    appendLeft(genColumndata(window.layout[index]));
   }
 }
 async function moveFileById(id, targetId, query) {
@@ -210,7 +212,7 @@ export function moveTemp(index) {
     }, 1000);
   }
   if (!targetId) {
-    let noteBook = window.layout[index]["noteBook"];
+    let noteBook = window.layout[index]['data']["noteBook"];
     selectedBlock.forEach((block) => {
       console.log(block, noteBook);
       moveFileByNotebook(block, noteBook, true);

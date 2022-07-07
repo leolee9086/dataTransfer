@@ -17,6 +17,7 @@ export function genColumndata(options) {
     },
   };
   if (options) {
+    data["data"]['id']=options.id
     for (let prop in options) {
       if (data.hasOwnProperty(prop)) {
         data[prop] = JSON.parse(JSON.stringify(options[prop]));
@@ -24,6 +25,7 @@ export function genColumndata(options) {
         data["data"][prop] = JSON.parse(JSON.stringify(options[prop]));
       }
     }
+    
   }
   return data;
 }
