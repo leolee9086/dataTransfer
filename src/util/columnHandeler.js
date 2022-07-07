@@ -1,9 +1,8 @@
-import {ID_Length} from './constants.js'
-import {genColumndata} from "./dataHandler"
+import { ID_Length } from "./constants.js";
+import { genColumndata } from "./dataHandler";
 export function appendRight(options = genColumndata()) {
   window.layout.push(genColumndata(options));
   refreshAll();
-
 }
 export function appendLeft(options = genColumndata()) {
   window.layout.unshift(genColumndata(options));
@@ -16,21 +15,19 @@ export function moveRight(id, index) {
   }
   console.log(id, index);
   let targetIndex = index + 1;
-  console.log(window.layout,window.layout[targetIndex]);
+  console.log(window.layout, window.layout[targetIndex]);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]['data']["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]['data']["noteBook"]);
+    if (!targetId && window.layout[targetIndex]["data"]["noteBook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]["data"]["noteBook"]);
       return;
+    } else if (!targetId && !window.layout[targetIndex]["data"]["noteBook"]) {
+      return;
+    } else {
+      moveFileById(id, targetId);
     }
-    else if(!targetId && !window.layout[targetIndex]['data']["noteBook"]){
-      return
-    }
-    else{moveFileById(id, targetId);}
   } else {
-    appendRight(
-      genColumndata({ id: id, type: "Filetree" })
-    );
+    appendRight(genColumndata({ id: id, type: "Filetree" }));
   }
 }
 export function moveLeft(id, index) {
@@ -43,16 +40,15 @@ export function moveLeft(id, index) {
   console.log(window.layout);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]['data']["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]['data']["noteBook"]);
+    if (!targetId && window.layout[targetIndex]["data"]["noteBook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]["data"]["noteBook"]);
       return;
-    }
-    else if(!targetId && !window.layout[targetIndex]['data']["noteBook"]){
-      return
+    } else if (!targetId && !window.layout[targetIndex]["data"]["noteBook"]) {
+      return;
     }
     moveFileById(id, targetId);
   } else {
-    genColumndata({ id: id, type: "Filetree" })
+    genColumndata({ id: id, type: "Filetree" });
   }
 }
 async function moveFileById(id, targetId, query) {
@@ -107,33 +103,36 @@ export function remove(index) {
   refreshAll();
 }
 export function refreshAll() {
-  console.log(window.layout)
+  console.log(window.layout);
+  let left = window.layoutCenter.value.scrollLeft;
+  console.log(left)
   window.layout.forEach((element, i) => {
     let json1 = JSON.parse(JSON.stringify(element));
     let json2 = JSON.parse(JSON.stringify(element["data"]));
 
     window.layout[i] = null;
-    console.log(i)
-    console.log(element)
+    console.log(i);
+    console.log(element);
     setTimeout(() => {
       window.layout[i] = json1;
-      window.layout[i]["data"]=json2
-      console.log(i,window.layout)
-
-    }, 100);
+      window.layout[i]["data"] = json2;
+    }, 0);
+    setTimeout(() => {
+      window.layoutCenter.value.scrollTo(left,0);
+    }, 500);
   });
-
 }
-
 
 export function refreshIndex(index) {
   let json = JSON.parse(JSON.stringify(window.layout[index]));
+  let json2 = JSON.parse(JSON.stringify(window.layout[index]["data"]));
+
   window.layout[index] = null;
   setTimeout(() => {
     window.layout[index] = json;
+    window.layout[index]["data"]=json2
   }, 100);
 }
-
 
 export function checkSelected(id) {
   let flag = false;
@@ -164,14 +163,14 @@ export function UnSelectBlock(id) {
     UnSelectAllBlock();
     return;
   }
-  window.selectedBlock.forEach(selectedBlock=>{
- 
-  selectedBlock.forEach((item, index) => {
-    item == id ? selectedBlock.splice(index, 1) : null;
-    if (item == id && index == 0) {
-      selectedBlock[0] = null;
-    }
-  });})
+  window.selectedBlock.forEach((selectedBlock) => {
+    selectedBlock.forEach((item, index) => {
+      item == id ? selectedBlock.splice(index, 1) : null;
+      if (item == id && index == 0) {
+        selectedBlock[0] = null;
+      }
+    });
+  });
 }
 export function UnSelectAllBlock() {
   let selectedBlock = window.selectedBlock[window.selectedBlockIndex.value];
@@ -212,7 +211,7 @@ export function moveTemp(index) {
     }, 1000);
   }
   if (!targetId) {
-    let noteBook = window.layout[index]['data']["noteBook"];
+    let noteBook = window.layout[index]["data"]["noteBook"];
     selectedBlock.forEach((block) => {
       console.log(block, noteBook);
       moveFileByNotebook(block, noteBook, true);
@@ -237,7 +236,6 @@ export function switchToLeft(index) {
   }
 }
 
-
 export function switchToPreviewer(index) {
   if (window.layout[index]) {
     window.layout[index].type = "Previewer";
@@ -248,11 +246,21 @@ export function switchToFiletree(index) {
     window.layout[index].type = "Filetree";
   }
 }
-export function miniMize(index){
+export function miniMize(index) {
   let currentdata = window.layout[index]["data"];
-  if(currentdata){
-    currentdata.rowSize=currentdata.size
+  if (currentdata) {
+    currentdata.rowSize =JSON.stringify(currentdata.size);
+    currentdata.size = { width: 0, height: 200 };
+    refreshIndex(index)}
 
-    currentdata.size={width:0,height:200}
+  
+}
+export function maxMize(index){
+  let currentdata = window.layout[index]["data"];
+  if (currentdata&&currentdata.rowSize) {
+    if(currentdata.size&&currentdata.size.width==0){
+    currentdata.size=JSON.parse(currentdata.rowSize)
+    currentdata.rowSize ="";
+    refreshIndex(index)}
   }
 }

@@ -45,7 +45,7 @@
         aria-label="最小化 Ctrl+W"
       >
         <svg>
-          <use xlink:href="#iconMin"></use>
+          <use xlink:href="#iconContract"></use>
         </svg>
       </span>
     </div>

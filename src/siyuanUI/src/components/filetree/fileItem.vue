@@ -152,7 +152,6 @@ getstate();
 function getstate() {
   //遍历查找是否选中以及选择组序号
   let selectedstate = checkSelected(file.id) + "";
-  console.log("测试1111111", selectedstate);
   if (selectedstate && selectedstate !== "undefined") {
     selectedstate = JSON.parse(selectedstate);
     state.selected = selectedstate.selected;
@@ -164,11 +163,12 @@ watch(window.selectedBlock, () => {
   console.log(window.selectedBlock);
   getstate();
 });
-let icon = file && file.icon ? "\#icon\-" + file.icon : "\#icon-1f4c4";
-
 function getIndex(event) {
   state.selectedBlockIndex = window.selectedBlockIndex.value;
 }
+
+
+let icon = file && file.icon ? "\#icon\-" + file.icon : "\#icon-1f4c4";
 function 打开() {
   let link = window.document.createElement("a");
   link.setAttribute("href", `siyuan://blocks/${file.id}`);

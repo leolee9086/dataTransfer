@@ -57,7 +57,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
         </div>
       </div>
 
-      <div class="fn__flex fn__flex-1">
+      <div class="fn__flex fn__flex-1" ref="layoutCenter">
         <template v-for="(item, i) in layoutArray.layout">
           <template v-if="item">
             <B3layoutColumn @dblclick="appendRight;" :options="item" :index="i">
@@ -111,6 +111,8 @@ import B3layoutColumn from "./siyuanUI/src/components/B3layoutColumn.vue";
 import { appendRight } from "./util/columnHandeler";
 import {genColumndata} from "./util/dataHandler"
 import { debounce } from "./util/event.js";
+let layoutCenter =ref(null)
+window.layoutCenter=layoutCenter
 const openOut = function(){
   window.parent.open('/widgets/dataTransfer')
 
