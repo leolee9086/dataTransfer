@@ -72,6 +72,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
               @dblclick="appendRight()"
             >
               <h2>双击此处增加分栏</h2>
+              <div class="b3-list-item" id="saveLayout"></div>
               <div class="b3-list-item" id="saveLayout">
                 <button @click="saveLayout" style="width: 100%">保存布局</button>
               </div>
@@ -129,10 +130,6 @@ import B3layoutColumn from "./siyuanUI/src/components/B3layoutColumn.vue";
 import { appendRight, refreshAll } from "./util/columnHandeler";
 import { genColumndata } from "./util/dataHandler";
 import { debounce } from "./util/event.js";
-import B3Dialog from "./siyuanUI/src/components/B3Dialog.vue";
-import CommonIcons from "./components/commonIcons.vue";
-import B3Label from "./siyuanUI/src/components/B3Label.vue";
-import B3Input from "./siyuanUI/src/components/B3Input.vue";
 let layoutCenter = ref(null);
 
 window.layoutCenter = layoutCenter;

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "@vueuse/core": "^7.1.1",
     "dayjs": "^1.11.3",
     "electron": "^19.0.6",
     "vite-plugin-conditional-compile": "^1.1.4",

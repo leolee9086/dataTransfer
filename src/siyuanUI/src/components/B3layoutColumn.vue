@@ -12,6 +12,7 @@ refreshIndex,
 import { reactive, nextTick, watch } from "vue";
 import { ref } from "vue";
 import B3TabBar from "./B3TabBar.vue";
+import B3Search from "./B3Search.vue";
 const { options, resizeable, autoHeight, autoWidth, index } = defineProps([
   "options",
   "resizeable",
@@ -82,7 +83,7 @@ const ondragsover = function (event) {
           :is="options.type == 'Filetree' ? 'B3Filetree' : 'B3ProtylePreviewer'"
           :options="options"
         ></component>
-
+        <B3Search :options="options" :index="index"></B3Search>
       </template>
     </div>
 

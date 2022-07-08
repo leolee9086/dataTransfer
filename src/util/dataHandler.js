@@ -1,18 +1,18 @@
 import { ID_Length } from "./constants.js";
 export function getLayout(){
-  
+
 }
 export function genColumndata(options) {
   let data = {
     id: "20200812220555-lj3enxa",
     type: "Filetree",
     data: {
-      noteBook: "",
+      notebook: "",
       files: [],
       path: "",
       Hpath: "",
       boxIcon: "",
-      noteBookConf: {},
+      notebookConf: {},
       pathArray: [],
       nameDict: {},
       name: "",
@@ -49,15 +49,15 @@ export function mergeData(fromData, toData) {
 export function setName(name, index) {
   window.layout[index]["data"].name = window.layout[index].name = name;
 }
-export function goToPath(noteBook, path, index) {
+export function goToPath(notebook, path, index) {
   console.log(window.layout[index],index);
   let currentdata = window.layout[index]["data"];
   window.核心api.listDocsByPath(
-    { path: path, notebook: noteBook },
+    { path: path, notebook: notebook },
     "",
     (data) => {
       if (data) {
-        currentdata.noteBook = noteBook;
+        currentdata.notebook = notebook;
         currentdata.path = path;
         currentdata.files = data.files;
         currentdata.subtype = "Filetree";
@@ -66,7 +66,7 @@ export function goToPath(noteBook, path, index) {
         getNotebookConf(index);
         getPathArray(index);
         setId(path, index);
-        setNoteBook(noteBook, index);
+        setNoteBook(notebook, index);
         window.layout[index].id=currentdata.id
       }
     }
@@ -76,7 +76,7 @@ export function goToPath(noteBook, path, index) {
 export function getHpath(index) {
   let currentdata = window.layout[index]["data"];
   window.核心api.getHPathByPath(
-    { notebook: currentdata.noteBook, path: currentdata.path },
+    { notebook: currentdata.notebook, path: currentdata.path },
     "",
     (data) => {
       currentdata.Hpath = data;
@@ -87,10 +87,10 @@ export function getNotebookConf(index) {
   let currentdata = window.layout[index]["data"];
 
   window.核心api.getNotebookConf(
-    { notebook: currentdata.noteBook },
+    { notebook: currentdata.notebook },
     "",
     (data) => {
-      currentdata.noteBookConf = data;
+      currentdata.notebookConf = data;
       if(currentdata.path=='/'){
         currentdata.name=data.name
       }
@@ -120,7 +120,7 @@ export function getPathItemInfor(pathItem, index) {
     
   });
 }
-export function setId(idPath, index, noteBook) {
+export function setId(idPath, index, notebook) {
   if (!window.layout[index]) {
     return;
   }
@@ -135,27 +135,27 @@ export function setId(idPath, index, noteBook) {
   } else {
     window.layout[index]["data"]["id"] = "";
   }
-  if (noteBook) {
-    window.layout[index]["data"]["noteBook"] = noteBook;
+  if (notebook) {
+    window.layout[index]["data"]["notebook"] = notebook;
   }
 }
-export function setNoteBook(noteBook, index) {
+export function setNoteBook(notebook, index) {
   if (!window.layout[index]) {
     return;
   }
-  window.layout[index]["data"]["noteBook"] = noteBook;
+  window.layout[index]["data"]["notebook"] = notebook;
 }
 export function getNotebooks(index) {
   let currentdata = window.layout[index]["data"];
   let notebooks = window.notebooks;
 
   window.核心api.lsNotebooks({}, "", (data) => {
-    currentdata.noteBook = "";
+    currentdata.notebook = "";
     currentdata.files = [];
     currentdata.path = "";
     currentdata.Hpath = "";
     currentdata.boxIcon = "";
-    currentdata.noteBookConf = {};
+    currentdata.notebookConf = {};
     currentdata.pathArray = [];
     currentdata.nameDict = {};
     currentdata.subtype = "NoteBooks";

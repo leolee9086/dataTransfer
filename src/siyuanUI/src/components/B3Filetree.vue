@@ -58,11 +58,11 @@
           工作空间/
         </span>
         <span
-          v-if="currentdata.noteBookConf.conf"
+          v-if="currentdata.notebookConf.conf"
           class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
-          @click="goToPath(currentdata.noteBook, '/',index)"
+          @click="goToPath(currentdata.notebook, '/',index)"
         >
-          {{ currentdata.noteBookConf.conf.name }}/
+          {{ currentdata.notebookConf.conf.name }}/
         </span>
         <template v-if="currentdata.pathArray[1]">
           <template v-for="(item, i) in currentdata.pathArray">
@@ -78,7 +78,7 @@
         </template>
       </div>
     </div>
-    <div ref = "noteBooksListDom" class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
+    <div ref = "notebooksListDom" class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
       <template v-for="(item, i) in notebooks.value" v-if="notebooks">
         <notebookItem
           @click="goToPath(item.id, '/',index)"
@@ -102,7 +102,7 @@
         <template   v-if='i<visiableMaxIndex.value'>
           <fileItem
             :file="item"
-            @click="goToPath(currentdata.noteBook, item.path,index)"
+            @click="goToPath(currentdata.notebook, item.path,index)"
             :index="index"
           ></fileItem>
           </template>
@@ -133,13 +133,13 @@ const emit = defineEmits(["最小化"]);
 let { options, index } = defineProps(["options", "index"]);
 console.log(options);
 console.log(window.layout[index]);
-let { type, id, noteBook } = options.data;
+let { type, id, notebook } = options.data;
 let realtype = "" + type;
 realtype = ref(realtype);
 let currentdata = window.layout[index]["data"];
 let notebooks = window.notebooks
 let visiableMaxIndex = reactive({value:window.innerHeight/30})
-let noteBooksListDom= ref(null)
+let notebooksListDom= ref(null)
 let docListDom = ref(null)
 const genVisiable=function(type){
   let containerScrollHeight
@@ -166,8 +166,8 @@ onMounted(() => {
       console.log(currentdata.nameDict);
     });
   }
-  if (!id && noteBook) {
-    goToPath(noteBook, "/",index);
+  if (!id && notebook) {
+    goToPath(notebook, "/",index);
   }
   else{
     getNotebooks(index);
@@ -187,7 +187,7 @@ function getPathName() {
 }
 function getHpath() {
   window.核心api.getHPathByPath(
-    { notebook: currentdata.noteBook, path: currentdata.path },
+    { notebook: currentdata.notebook, path: currentdata.path },
     "",
     (data) => {
       currentdata.Hpath = data;
@@ -206,10 +206,10 @@ function goToParent() {
   ParentPath == "/.sy" ? (ParentPath = "/") : null;
   console.log(ParentPath,path)
   if (ParentPath !== ".sy" && currentdata.path !== "/" && path) {
-    goToPath(currentdata.noteBook, ParentPath,index);
+    goToPath(currentdata.notebook, ParentPath,index);
   } else {
     getNotebooks(index);
-    setId("", index, currentdata.noteBook);
+    setId("", index, currentdata.notebook);
   }
 }
 

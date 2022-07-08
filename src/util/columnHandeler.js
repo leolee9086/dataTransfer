@@ -18,10 +18,10 @@ export function moveRight(id, index) {
   console.log(window.layout, window.layout[targetIndex]);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]["data"]["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]["data"]["noteBook"]);
+    if (!targetId && window.layout[targetIndex]["data"]["notebook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]["data"]["notebook"]);
       return;
-    } else if (!targetId && !window.layout[targetIndex]["data"]["noteBook"]) {
+    } else if (!targetId && !window.layout[targetIndex]["data"]["notebook"]) {
       return;
     } else {
       moveFileById(id, targetId);
@@ -40,10 +40,10 @@ export function moveLeft(id, index) {
   console.log(window.layout);
   if (window.layout && window.layout[targetIndex]) {
     let targetId = window.layout[targetIndex]["id"];
-    if (!targetId && window.layout[targetIndex]["data"]["noteBook"]) {
-      moveFileByNotebook(id, window.layout[targetIndex]["data"]["noteBook"]);
+    if (!targetId && window.layout[targetIndex]["data"]["notebook"]) {
+      moveFileByNotebook(id, window.layout[targetIndex]["data"]["notebook"]);
       return;
-    } else if (!targetId && !window.layout[targetIndex]["data"]["noteBook"]) {
+    } else if (!targetId && !window.layout[targetIndex]["data"]["notebook"]) {
       return;
     }
     moveFileById(id, targetId);
@@ -78,7 +78,7 @@ async function moveFileById(id, targetId, query) {
     }
   );
 }
-function moveFileByNotebook(id, noteBook, query) {
+function moveFileByNotebook(id, notebook, query) {
   let sql = `select * from blocks where id ='${id}' `;
   window.核心api.sql({ stmt: sql }, "", (data) => {
     if (data && data[0]) {
@@ -86,7 +86,7 @@ function moveFileByNotebook(id, noteBook, query) {
         {
           fromNotebook: data[0].box,
           fromPath: data[0].path,
-          toNotebook: noteBook,
+          toNotebook: notebook,
           toPath: "/",
         },
         "",
@@ -211,10 +211,10 @@ export function moveTemp(index) {
     }, 1000);
   }
   if (!targetId) {
-    let noteBook = window.layout[index]["data"]["noteBook"];
+    let notebook = window.layout[index]["data"]["notebook"];
     selectedBlock.forEach((block) => {
-      console.log(block, noteBook);
-      moveFileByNotebook(block, noteBook, true);
+      console.log(block, notebook);
+      moveFileByNotebook(block, notebook, true);
     });
 
     setTimeout(() => {

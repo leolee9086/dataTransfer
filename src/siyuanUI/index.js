@@ -14,6 +14,7 @@ import B3DocTiltle from "./src/components/B3DocTiltle.vue";
 import B3Filetree from "./src/components/B3Filetree.vue";
 import B3TabBar from "./src/components/B3TabBar.vue";
 import tempBoxItem from "./src/components/tempBox/tempBoxItem.vue";
+import B3Search from "./src/components/B3Search.vue";
 
 const siyuanUI = {};
 siyuanUI.install = function (Vue) {
@@ -33,6 +34,7 @@ siyuanUI.install = function (Vue) {
   Vue.component("B3Filetree", B3Filetree);
   Vue.component("B3TabBar", B3TabBar);
   Vue.component("tempBoxItem", tempBoxItem);
+  Vue.component("B3Search", B3Search);
 
   ///#if!BROWSER
   /*  Vue.component(B3Select.name, B3Select);
