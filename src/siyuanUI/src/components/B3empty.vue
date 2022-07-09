@@ -11,7 +11,7 @@
                 <button @click="saveLayout" style="width: 100%">保存布局</button>
               </div>
               <div class="b3-list-item" id="saveLayout">
-                <button @click="saveLayout(true)" style="width: 100%">导出布局</button>
+                <button @click="()=>saveLayout(true)" style="width: 100%">导出布局</button>
               </div>
               <div @click="getLayout" class="b3-list-item" id="getLayout">
                 <button style="width: 100%">重新加载布局</button>

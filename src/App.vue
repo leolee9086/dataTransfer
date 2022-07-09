@@ -77,7 +77,7 @@ ${num <= 9 ? 'Alt +' + num : 'shift + Alt' + (num - 9)}
                 <button @click="saveLayout" style="width: 100%">保存布局</button>
               </div>
               <div class="b3-list-item" id="saveLayout">
-                <button @click="saveLayout(true)" style="width: 100%">导出布局</button>
+                <button @click="(event)=>saveLayout(event,true)" style="width: 100%">导出布局</button>
               </div>
               <div @click="getLayout" class="b3-list-item" id="getLayout">
                 <button style="width: 100%">重新加载布局</button>
@@ -168,7 +168,7 @@ if (window.require) {
 window.layout = layoutArray.layout;
 window.selectedBlock = layoutArray.selectedBlock;
 window.selectedBlockIndex = layoutArray.selectedBlockIndex;
-const saveLayout = function (flag) {
+const saveLayout = function (event,flag) {
   let data = {
     layout: window.layout,
     selectedBlock: window.selectedBlock,

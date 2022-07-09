@@ -89,84 +89,34 @@
         <use xlink:href="#iconMore"></use>
       </svg>
     </span>
-    <span
-      data-type="new"
-      class="b3-list-item__action b3-tooltips b3-tooltips__nw"
-      v-if="!state.selected"
-      @click="
-        ($event) => {
-
-          getIndex($event);
-          $event.stopPropagation();
-          selectBlock(file.id);
-                              state.selected = true;
-
+    <blockselector
+      :id="file.id"
+      @selectBlock="
+        (data) => {
+          state.selected = true;
+          state.selectedBlockIndex=data.index;
         }
       "
-      aria-label="选中"
-    >
-      <svg>
-        <use xlink:href="#iconAdd"></use>
-      </svg>
-    </span>
-    <span
-      data-type="new"
-      class="b3-list-item__action b3-tooltips b3-tooltips__nw"
-      v-if="state.selected"
-      style="display: block"
-      @click="
-        ($event) => {
-
-          getIndex($event);
-          $event.stopPropagation();
-
-          UnSelectBlock(file.id, state.selectedBlockIndex);
-                                        state.selected = false;
-
+      @UnSelectBlock="
+              (data) => {
+          state.selected = false;
+          state.selectedBlockIndex=undefined;
         }
+
       "
-      aria-label="取消"
-    >
-      <svg>
-        <use xlink:href="#iconMin"></use>
-      </svg>
-    </span>
+    ></blockselector>
   </li>
 </template>
 <script setup>
-import {
-  moveRight,
-  moveLeft,
-  selectBlock,
-  UnSelectBlock,
-  checkSelected,
-} from "../../../../util/columnHandeler";
+import { moveRight, moveLeft } from "../../../../util/columnHandeler";
 import { reactive, getCurrentInstance, watch } from "vue";
+import blockselector from "../listbutton/blockselector.vue";
 const emit = defineEmits(["open"]);
 let { file, index } = defineProps(["file", "index"]);
 let state = reactive({
   selected: false,
   selectedBlockIndex: window.selectedBlockIndex.value + 0,
 });
-getstate();
-function getstate() {
-  //遍历查找是否选中以及选择组序号
-  let selectedstate = checkSelected(file.id) + "";
-  if (selectedstate && selectedstate !== "undefined") {
-    selectedstate = JSON.parse(selectedstate);
-    state.selected = selectedstate.selected;
-    state.selectedBlockIndex = selectedstate.selectedBlockIndex;
-  } 
-}
-
-watch(window.selectedBlock, () => {
-  console.log(window.selectedBlock);
-  getstate();
-});
-function getIndex(event) {
-  state.selectedBlockIndex = window.selectedBlockIndex.value;
-}
-
 
 let icon = file && file.icon ? "\#icon\-" + file.icon : "\#icon-1f4c4";
 function 打开() {

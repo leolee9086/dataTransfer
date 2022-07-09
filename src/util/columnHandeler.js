@@ -51,7 +51,7 @@ export function moveLeft(id, index) {
     genColumndata({ id: id, type: "Filetree" });
   }
 }
-async function moveFileById(id, targetId, query) {
+export async function moveFileById(id, targetId, query) {
   console.log(id, targetId);
   // let sql = `select * from blocks where id ='${id}' or id ='${targetId}'`;
   let fromBlock = await window.核心api.getBlockInfo({ id: id }, "", (data) => {
@@ -105,7 +105,7 @@ export function remove(index) {
 export function refreshAll() {
   console.log(window.layout);
   let left = window.layoutCenter.value.scrollLeft;
-  console.log(left)
+  console.log(left);
   window.layout.forEach((element, i) => {
     let json1 = JSON.parse(JSON.stringify(element));
     let json2 = JSON.parse(JSON.stringify(element["data"]));
@@ -118,7 +118,7 @@ export function refreshAll() {
       window.layout[i]["data"] = json2;
     }, 0);
     setTimeout(() => {
-      window.layoutCenter.value.scrollTo(left,0);
+      window.layoutCenter.value.scrollTo(left, 0);
     }, 500);
   });
 }
@@ -130,7 +130,7 @@ export function refreshIndex(index) {
   window.layout[index] = null;
   setTimeout(() => {
     window.layout[index] = json;
-    window.layout[index]["data"]=json2
+    window.layout[index]["data"] = json2;
   }, 100);
 }
 
@@ -141,7 +141,8 @@ export function checkSelected(id) {
     let blockArray = window.selectedBlock[i];
     index = JSON.stringify(blockArray).indexOf(id);
     flag = index >= 0 ? true : false;
-    if (flag&&id) {
+    console.log(flag,id)
+    if (flag && id) {
       console.log(flag);
       console.log(JSON.stringify(blockArray), id, index);
       console.log(JSON.stringify({ selected: flag, selectedBlockIndex: i }));
@@ -150,7 +151,13 @@ export function checkSelected(id) {
         selectedBlockIndex: (window.Digit && window.Digit.num) || i,
       });
     }
+   
   }
+    return JSON.stringify({
+      selected: false,
+      selectedBlockIndex: undefined,
+    });
+  
 }
 export function selectBlock(id) {
   console.log(window.selectedBlockIndex);
@@ -249,18 +256,26 @@ export function switchToFiletree(index) {
 export function miniMize(index) {
   let currentdata = window.layout[index]["data"];
   if (currentdata) {
-    currentdata.rowSize =JSON.stringify(currentdata.size);
+    currentdata.rowSize = JSON.stringify(currentdata.size);
     currentdata.size = { width: 0, height: 200 };
-    refreshIndex(index)}
-
-  
+    refreshIndex(index);
+  }
 }
-export function maxMize(index){
+export function maxMize(index) {
   let currentdata = window.layout[index]["data"];
-  if (currentdata&&currentdata.rowSize) {
-    if(currentdata.size&&currentdata.size.width==0){
-    currentdata.size=JSON.parse(currentdata.rowSize)
-    currentdata.rowSize ="";
-    refreshIndex(index)}
+  if (currentdata && currentdata.rowSize) {
+    if (currentdata.size && currentdata.size.width == 0) {
+      currentdata.size = JSON.parse(currentdata.rowSize);
+      currentdata.rowSize = "";
+      refreshIndex(index);
+    }
+  }
+}
+export function switchSize(index) {
+  let currentdata = window.layout[index]["data"];
+  if (currentdata && currentdata.rowSize) {
+    maxMize(index);
+  } else {
+    miniMize(index);
   }
 }

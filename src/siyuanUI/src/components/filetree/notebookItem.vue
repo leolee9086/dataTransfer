@@ -10,11 +10,7 @@
                     <use xlink:href="#iconMore"></use>
                 </svg>
             </span>
-            <span data-type="new" class="b3-list-item__action b3-tooltips b3-tooltips__w" aria-label="新建文档">
-                <svg>
-                    <use xlink:href="#iconAdd"></use>
-                </svg>
-            </span>
+         
             <ul class>
              <suspense>
                 <slot>

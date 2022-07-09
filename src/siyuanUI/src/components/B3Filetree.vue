@@ -41,7 +41,11 @@
       <span
         data-type="min"
         class="block__icon b3-tooltips b3-tooltips__sw"
-        @click="()=>{miniMize(index)}"
+        @click="
+          () => {
+            miniMize(index);
+          }
+        "
         aria-label="最小化 Ctrl+W"
       >
         <svg>
@@ -49,6 +53,7 @@
         </svg>
       </span>
     </div>
+
     <div class="protyle-breadcrumb">
       <div class="protyle-breadcrumb__bar protyle-breadcrumb__bar">
         <span
@@ -60,7 +65,7 @@
         <span
           v-if="currentdata.notebookConf.conf"
           class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
-          @click="goToPath(currentdata.notebook, '/',index)"
+          @click="goToPath(currentdata.notebook, '/', index)"
         >
           {{ currentdata.notebookConf.conf.name }}/
         </span>
@@ -70,7 +75,11 @@
               class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
               v-if="currentdata.nameDict[item]"
               @click="
-                goToPath(currentdata.nameDict[item].box, currentdata.nameDict[item].path,index)
+                goToPath(
+                  currentdata.nameDict[item].box,
+                  currentdata.nameDict[item].path,
+                  index
+                )
               "
               >{{ currentdata.nameDict[item].content }}/</span
             >
@@ -78,37 +87,50 @@
         </template>
       </div>
     </div>
-    <div ref = "notebooksListDom" class="fn__flex-1 NoteBooks" data-type="navigation" v-if="currentdata.subtype == 'NoteBooks'">
-      <template v-for="(item, i) in notebooks.value" v-if="notebooks">
-        <notebookItem
-          @click="goToPath(item.id, '/',index)"
-          :notebook="item"
-          v-if="!item.closed"
-        >
-        </notebookItem>
-      </template>
-    </div>
-    <div ref="docListDom"  
-    class="fn__flex-1 Filetree" 
-    data-type="navigation" 
-    v-if="currentdata.subtype == 'Filetree'"
-    @scroll="()=>genVisiable('doc')"
-    >
-      <ul class>
-        <template 
-        v-for="(item, i) in currentdata.files" 
-        :key="item.id + i + index+''"
-        >
-        <template   v-if='i<visiableMaxIndex.value'>
-          <fileItem
-            :file="item"
-            @click="goToPath(currentdata.notebook, item.path,index)"
-            :index="index"
-          ></fileItem>
-          </template>
+    <B3Search
+      :options="options"
+      :path="currentdata.notebook + currentdata.path"
+      :index="index"
+    ></B3Search>
+    <template v-if="!currentdata.query">
+      <div
+        ref="notebooksListDom"
+        class="fn__flex-1 NoteBooks"
+        data-type="navigation"
+        v-if="currentdata.subtype == 'NoteBooks'"
+      >
+        <template v-for="(item, i) in notebooks.value" v-if="notebooks">
+          <notebookItem
+            @click="goToPath(item.id, '/', index)"
+            :notebook="item"
+            v-if="!item.closed"
+          >
+          </notebookItem>
         </template>
-      </ul>
-    </div>
+      </div>
+      <div
+        ref="docListDom"
+        class="fn__flex-1 Filetree"
+        data-type="navigation"
+        v-if="currentdata.subtype == 'Filetree'"
+        @scroll="() => genVisiable('doc')"
+      >
+        <ul class>
+          <template
+            v-for="(item, i) in currentdata.files"
+            :key="item.id + i + index + ''"
+          >
+            <template v-if="i < visiableMaxIndex.value">
+              <fileItem
+                :file="item"
+                @click="goToPath(currentdata.notebook, item.path, index)"
+                :index="index"
+              ></fileItem>
+            </template>
+          </template>
+        </ul>
+      </div>
+    </template>
   </div>
 </template>
 <script setup>
@@ -117,7 +139,7 @@ import {
   moveLeft,
   selectBlock,
   moveTemp,
-  miniMize
+  miniMize,
 } from "../../../util/columnHandeler";
 import { reactive, watch, onMounted, ref } from "vue";
 import notebookItem from "./filetree/notebookItem.vue";
@@ -127,8 +149,8 @@ import {
   goToPath,
   getNotebookConf,
   setId,
-  getNotebooks
-} from "../../../util/dataHandler"
+  getNotebooks,
+} from "../../../util/dataHandler";
 const emit = defineEmits(["最小化"]);
 let { options, index } = defineProps(["options", "index"]);
 console.log(options);
@@ -137,47 +159,43 @@ let { type, id, notebook } = options.data;
 let realtype = "" + type;
 realtype = ref(realtype);
 let currentdata = window.layout[index]["data"];
-let notebooks = window.notebooks
-let visiableMaxIndex = reactive({value:window.innerHeight/30})
-let notebooksListDom= ref(null)
-let docListDom = ref(null)
-const genVisiable=function(type){
-  let containerScrollHeight
-  let containerInnerHeight 
-  if(type=="doc"&&docListDom.value){
-    console.log(docListDom)
-    containerScrollHeight = docListDom.value.scrollTop
-    containerInnerHeight =docListDom.value.offsetHeight
+let notebooks = window.notebooks;
+let visiableMaxIndex = reactive({ value: window.innerHeight / 30 });
+let notebooksListDom = ref(null);
+let docListDom = ref(null);
+const genVisiable = function (type) {
+  let containerScrollHeight;
+  let containerInnerHeight;
+  if (type == "doc" && docListDom.value) {
+    console.log(docListDom);
+    containerScrollHeight = docListDom.value.scrollTop;
+    containerInnerHeight = docListDom.value.offsetHeight;
   }
-  visiableMaxIndex.value=(containerScrollHeight+containerInnerHeight)/28
-    console.log(visiableMaxIndex)
-}
-
+  visiableMaxIndex.value = (containerScrollHeight + containerInnerHeight) / 28;
+  console.log(visiableMaxIndex);
+};
 
 onMounted(() => {
   if (id) {
-    console.log(index)
+    console.log(index);
     let sql = `select * from blocks where id = '${id}'`;
     window.核心api.sql({ stmt: sql }, "", (data) => {
-      data && data[0] ? goToPath(data[0].box, data[0].path,index) : null;
+      data && data[0] ? goToPath(data[0].box, data[0].path, index) : null;
       if (data && data[0]) {
-        setName(data[0].content,index)
+        setName(data[0].content, index);
       }
       console.log(currentdata.nameDict);
     });
   }
   if (!id && notebook) {
-    goToPath(notebook, "/",index);
-  }
-  else{
+    goToPath(notebook, "/", index);
+  } else {
     getNotebooks(index);
-
   }
 });
 let realid = "" + id;
 realid = ref(id);
 getNotebooks(index);
-
 
 function getPathName() {
   currentdata.pathArray.forEach((item) => {
@@ -204,15 +222,14 @@ function goToParent() {
       currentdata.path.length - "20210808180117-czj9bvb".length - 3
     ) + ".sy";
   ParentPath == "/.sy" ? (ParentPath = "/") : null;
-  console.log(ParentPath,path)
+  console.log(ParentPath, path);
   if (ParentPath !== ".sy" && currentdata.path !== "/" && path) {
-    goToPath(currentdata.notebook, ParentPath,index);
+    goToPath(currentdata.notebook, ParentPath, index);
   } else {
     getNotebooks(index);
     setId("", index, currentdata.notebook);
   }
 }
-
 
 let view = reactive({ 最小化: false });
 

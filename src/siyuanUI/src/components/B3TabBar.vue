@@ -11,6 +11,7 @@
         `
         : null
     "
+    @dblclick="switchSize(index)"
   >
     <div>
       <div>
@@ -199,6 +200,7 @@ import {
   moveLeft,
   maxMize,
   miniMize,
+  switchSize,
   remove,
   switchToLeft,
   switchToPreviewer,
